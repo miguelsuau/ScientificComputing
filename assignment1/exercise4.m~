@@ -1,0 +1,7 @@
+%% Exercise 4 Step Size Controller
+mu = 3;
+abso
+
+%% Explicit Euler Adaptive Step
+[T,Y] = ExplicitEuler_AdaptiveStep(...
+        @VanderPolfunjac,tspan,n,y0,abstol,reltol,mu);
