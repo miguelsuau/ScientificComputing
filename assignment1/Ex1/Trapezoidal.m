@@ -1,7 +1,5 @@
 function [T,Y] = Trapezoidal(funJac,tspan,n,y0,varargin)
 
-m = length(y0);
-
 % Compute step size
 h = (tspan(2)-tspan(1))/n;
 

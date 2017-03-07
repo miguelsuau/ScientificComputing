@@ -17,3 +17,4 @@ while ((k < maxit) && (norm(R,'inf') > tol))
 end
 
 end
+    
