@@ -10,27 +10,26 @@ Y = y0;
 T(1) = tspan(1);
 
 % Compute initial step size
-h0 = (tspan(2)-tspan(1))/(n-1);
-     hn = h0;
+hn = (tspan(2)-tspan(1))/(n-1);
+
 while T(end) < tspan(2)
-    
-    f = feval(fun,T(end),Y(end,:),varargin{:});
-   
-%     hn = h0;
+    % hn = h0;
     if T(end)+hn > tspan(2)
         hn = tspan(2)-T(end);
     end
     
+    f = feval(fun,T(end),Y(:,end),varargin{:});
+       
     AcceptStep = false;
     while ~ AcceptStep
         h = hn;
         % Step size h
-        Y1 = Y(end,:) + h*f;
+        Y1 = Y(:,end) + h*f;
     
         % Step size h/2
         hm = 0.5*h;
         Tm = T(end) + hm;
-        Ym = Y(end,:) + hm*f;
+        Ym = Y(:,end) + hm*f;
         fm = feval(fun,Tm,Ym,varargin{:});
         Yhat = Ym + hm*fm;
     
@@ -46,8 +45,8 @@ while T(end) < tspan(2)
     end
     
     T(end+1) = T(end) + h;
-    Y(end+1,:) = Yhat; 
+    Y(:,end+1) = Yhat; 
 
 end
-    
+Y = Y';
 end
