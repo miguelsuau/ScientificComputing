@@ -1,0 +1,58 @@
+\documentclass[12pt, a4paper, titlepage]{article} %, draft
+
+\usepackage[a4paper]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{tabularx}
+\usepackage{appendix}
+
+\usepackage{fontspec}
+\setmainfont{XCharter}
+\defaultfontfeatures{Ligatures=TeX}
+
+\usepackage{titlesec}
+\usepackage{sectsty}
+
+\usepackage{microtype}
+%\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb} %für Zahlenset Symbole
+%\usepackage[lmargin=25mm, rmargin=25mm, bmargin=20mm, tmargin=20mm]{geometry}
+\usepackage{float}
+\usepackage{siunitx}  % \unit[val]{dim}; fractions: {}{}!
+\sisetup{separate-uncertainty, multi-part-units = single}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{textgreek}
+\usepackage{booktabs}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{epsfig}
+\usepackage{subfiles}
+% load subfile: \subfile{filename}
+% subfile starts: \documentclass[main.tex]{subfiles}
+%					\begin{document}; \end{document}
+%\usepackage[noabbrev]{cleveref}	  % includes type of ref before ref number
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+
+
+\begin{document}
+
+%\input{titlenew.tex} 
+\subfile{title.tex}
+%\includepdf{titlenew.pdf}
+
+
+%\maketitle
+\tableofcontents
+\newpage
+
+\subfile{ex3.tex}
+% \subfile{ex?.tex}
+
+\end{document}
