@@ -1,38 +1,54 @@
-function [Tout,Xout,Gout] = ESDIRK23(fun,jac,t0,tf,x0,h0,absTol,relTol,varargin)
+function [Tout,Xout,info,stats] = ESDIRK23(fun,jac,t0,tf,x0,h0,absTol,relTol,varargin)
 
 % ESDIRK23 
-
-%                                Resources
-% http://www2.imm.dtu.dk/pubdb/views/edoc_download.php/6607/pdf/imm6607.pdf
-% https://cn.inside.dtu.dk/cnnet/filesharing/Overview.aspx?FolderId=1059901&ElementId=536919
-
-
+% Modified version for Ex5 according to the tips given in the lecture.
+%=========================================================================
 % Runge-Kutta method parameters
-
 gamma = 1-1/sqrt(2);
 a31 = (1-gamma)/2;
 AT = [0 gamma a31;0 gamma a31;0 0 gamma];
 c  = [0; 2*gamma; 1];
 b  = AT(:,3);
-bhat = [(6*gamma-1)/(12*gamma); 1/(12*gamma*(1-2*gamma)); (1-3*gamma)/(3*(1-2*gamma))];
+bhat = [    (6*gamma-1)/(12*gamma); ...
+            1/(12*gamma*(1-2*gamma)); ...
+            (1-3*gamma)/(3*(1-2*gamma))    ];
 d  = b-bhat;
-phat = 3;
-s = 3; % stages
+% p  = 2; % ex5
+% phat = 3; % ex5
+s = 3;
 
 
 % error and convergence controller
 epsilon = 0.8;
 tau = 0.1*epsilon; %0.005*epsilon;
 itermax = 20;
-ke0 = 1.0/phat;
-ke1 = 1.0/phat;
-ke2 = 1.0/phat;
-alpharef = 0.3;
-alphaJac = -0.2;
-alphaLU  = -0.2;
-hrmin = 0.01;
-hrmax = 10;
+% ke0 = 1.0/phat;
+% ke1 = 1.0/phat;
+% ke2 = 1.0/phat;
+% alpharef = 0.3;
+% alphaJac = -0.2;
+% alphaLU  = -0.2;
+% hrmin = 0.01;
+% hrmax = 10;
 %========================================================================
+tspan = [t0 tf]; % carsten
+info = struct(...
+            'nStage',    s,       ... % carsten
+            'absTol',    absTol,  ... % carsten % ex5
+            'relTol',    relTol,  ... % carsten % ex5
+            'iterMax',   itermax, ... % carsten
+            'tspan',     tspan,   ... % carsten
+            'nFun',      0, ...
+            'nJac',      0, ...
+            'nLU',       0, ...
+            'nBack',     0, ...
+            'nStep',     0, ...
+            'nAccept',   0, ...
+            'nFail',     0, ...
+            'nDiverge',  0, ...
+            'nSlowConv', 0);
+
+
         
 % Main ESDIRK Integrator
 %========================================================================
@@ -41,35 +57,39 @@ F = zeros(nx,s);
 t = t0;
 x = x0;
 h = h0;
+IG = eye(length(x0)); % ex5 replacement for g
 
-[F(:,1),g]  = feval(fun,t,x,varargin{:});
-[dfdx,dgdx] = feval(jac,t,x,varargin{:});
-
-FreshJacobian = true;
+[F(:,1),~]  = feval(fun,t,x,varargin{:}); % ex5 no need for g
+info.nFun = info.nFun+1;
+[dfdx,~] = feval(jac,t,x,varargin{:}); % ex5 no need for g
+info.nJac = info.nJac+1;
+%FreshJacobian = true; % ex5
 if (t+h)>tf
     h = tf-t;
 end
-performLU();
+hgamma = h*gamma;
+dRdx = IG - hgamma*dfdx;
+[L,U,pivot] = lu(dRdx,'vector');
+info.nLU = info.nLU+1;
+%hLU = h; % ex5
 
-FirstStep = true;
-steps = 0;
-nAccept = 0;
-ConvergenceRestriction = false;
-PreviousReject = false;
+%FirstStep = true; % ex5
+%ConvergenceRestriction = false; % ex5
+%PreviousReject = false; % ex5
 iter = zeros(1,s);
 
 % Output
 chunk = 100;
 Tout = zeros(chunk,1);
 Xout = zeros(chunk,nx);
-Gout = zeros(chunk,nx); 
+%Gout = zeros(chunk,nx); % ex5
 
 Tout(1,1) = t;
 Xout(1,:) = x.';
-Gout(1,:) = g.';
+%Gout(1,:) = g.'; % ex5
 
 while t<tf
-    steps = steps+1;
+    info.nStep = info.nStep+1;
     %=====================================================================
     % A step in the ESDIRK method
     i=1;   
@@ -80,157 +100,81 @@ while t<tf
     while (i<s) && Converged
         % Stage i=2,...,s of the ESDIRK Method
         i=i+1;
-        phi = g + F(:,1:i-1)*(h*AT(1:i-1,i));
+        phi = x + F(:,1:i-1)*(h*AT(1:i-1,i)); % ex5
 
-        % Initial guess for the state
+        % Initial guess for the state % ex5 removed duplicate code
         dt = c(i)*h;
-        G = g + dt*F(:,1);
-        X = x + dgdx\(G-g);
-        T = t + dt;
+        %G = g + dt*F(:,1);
+        X = x + dt*F(:,1); % ex5
+        T = t+dt;
             
-        [F(:,i),G] = feval(fun,T,X,varargin{:});
-        R = G - hgamma*F(:,i) - phi;
-        rNewton = norm(R./(absTol + abs(G).*relTol),inf);
+        [F(:,i),~] = feval(fun,T,X,varargin{:}); % ex5
+        info.nFun = info.nFun+1;
+        R = X - hgamma*F(:,i) - phi; % ex5
+        rNewton = norm(R./(absTol + abs(X).*relTol), inf); % ex5
         Converged = (rNewton < tau);
-        %iter(i) = 0; % original, if uncomment then comment line 154: iter(:) = 0;
+        
         % Newton Iterations
-        while ~Converged && ~diverging && ~SlowConvergence%iter(i)<itermax
+        while ~Converged && ~diverging && ~SlowConvergence
             iter(i) = iter(i)+1;
             dX = U\(L\(R(pivot,1)));
+            info.nBack = info.nBack+1;
             X = X - dX;
             rNewtonOld = rNewton;
-            [F(:,i),G] = feval(fun,T,X,varargin{:});
-            R = G - hgamma*F(:,i) - phi;
-            rNewton = norm(R./(absTol + abs(G).*relTol),inf);
+            [F(:,i),~] = feval(fun,T,X,varargin{:}); % ex5
+            info.nFun = info.nFun+1;
+            R = X - hgamma*F(:,i) - phi; % ex5
+            rNewton = norm(R./(absTol + abs(X).*relTol), inf); % ex5
             alpha = max(alpha,rNewton/rNewtonOld);
             Converged = (rNewton < tau);
             diverging = (alpha >= 1);
-            SlowConvergence = (iter(i) >= itermax); % carsten
-            %SlowConvergence = (alpha >= 0.5); % carsten
-            %if (iter(i) >= itermax), i, iter(i), Converged, diverging, pause, end % carsten
+            SlowConvergence = (iter(i) >= itermax); 
         end
-        %diverging = (alpha >= 1); % original, if uncomment then comment line 142: diverging = (alpha >= 1)*i;
         diverging = (alpha >= 1)*i; % carsten, recording which stage is diverging
     end
     %if diverging, i, iter, pause, end
+    nstep = info.nStep;
+    stats.t(nstep) = t;
+    stats.h(nstep) = h;
+    stats.r(nstep) = NaN;
+    stats.iter(nstep,:) = iter;
+    stats.Converged(nstep) = Converged;
+    stats.Diverged(nstep)  = diverging;
+    stats.AcceptStep(nstep) = false;
+    stats.SlowConv(nstep)  = SlowConvergence*i; % carsten, recording which stage is converging to slow (reaching maximum no. of iterations)
     iter(:) = 0; % carsten
     %=====================================================================
-    % Error and Convergence Controller
-    if Converged
-        % Error estimation
-        e = F*(h*d);
-        r = norm(e./(absTol + abs(G).*relTol),inf);
-        CurrentStepAccept = (r<=1.0);
-        r = max(r,eps);
-        
-        % Step Length Controller
-        if CurrentStepAccept
-            nAccept = nAccept + 1;
-            if FirstStep || PreviousReject || ConvergenceRestriction
-                % Aymptotic step length controller
-                hr = 0.75*(epsilon/r)^ke0; 
-            else
-                % Predictive controller
-                s0 = (h/hacc);
-                s1 = max(hrmin,min(hrmax,(racc/r)^ke1));
-                s2 = max(hrmin,min(hrmax,(epsilon/r)^ke2));
-                hr = 0.95*s0*s1*s2;
-            end
-            racc = r;
-            hacc = h;
-            FirstStep = false;
-            PreviousReject = false;
-            ConvergenceRestriction = false;
-            
-            % Next Step
-            t = T;
-            x = X;
-            g = G;
-            F(:,1) = F(:,s);            
-            
-        else % Reject current step
-            if PreviousReject
-                kest = log(r/rrej)/(log(h/hrej));
-                kest = min(max(0.1,kest),phat);
-                hr   = max(hrmin,min(hrmax,((epsilon/r)^(1/kest))));
-            else
-                hr = max(hrmin,min(hrmax,((epsilon/r)^ke0)));
-            end
-            rrej = r;
-            hrej = h;
-            PreviousReject = true;
-        end
-   
-        % Convergence control
-        halpha = (alpharef/alpha);
-        if (alpha > alpharef)
-            ConvergenceRestriction = true;
-            if hr < halpha
-                h = max(hrmin,min(hrmax,hr))*h;
-            else
-                h = max(hrmin,min(hrmax,halpha))*h;
-            end
-        else
-            h = max(hrmin,min(hrmax,hr))*h;
-        end
-        h = max(1e-8,h);
-        if (t+h) > tf
-            h = tf-t;
-        end
-        
-        % Jacobian Update Strategy
-        FreshJacobian = false;
-        if alpha > alphaJac
-            [dfdx,dgdx] = feval(jac,t,x,varargin{:});
-            FreshJacobian = true;
-            performLU();
-        elseif (abs(h-hLU)/hLU) > alphaLU 
-            performLU();
-        end        
-    else % not converged
-        CurrentStepAccept = false;
-        ConvergenceRestriction = true;
-        if FreshJacobian && diverging
-            h = max(0.5*hrmin,alpharef/alpha)*h;
-        elseif FreshJacobian
-            if alpha > alpharef
-                h = max(0.5*hrmin,alpharef/alpha)*h;
-            else
-                h = 0.5*h;
-            end
-        end
-        if ~FreshJacobian
-            [dfdx,dgdx] = feval(jac,t,x,varargin{:});
-            FreshJacobian = true;
-        end
-        performLU();
-    end
+    
+    % Error estimation
+    e = F*(h*d);
+    r = norm(e./(absTol + abs(X).*relTol), inf); % ex5
+    r = max(r,eps);
+    stats.r(nstep) = r;
+    t = T;
+    x = X;
+    F(:,1) = F(:,s);  
+
+    % Jacobian Update Strategy
+    [dfdx,~] = feval(jac,t,x,varargin{:}); % ex5
+    info.nJac = info.nJac+1;
+    hgamma = h*gamma;
+    dRdx = IG - hgamma*dfdx; % ex5
+    [L,U,pivot] = lu(dRdx,'vector');
+    info.nLU = info.nLU+1;
+    info.nFail = info.nFail + ~Converged; % ex5
+    info.nDiverge = info.nDiverge + (~Converged && diverging); % ex5
     
     %=====================================================================
-    % Storage of variables for output
-    
-    if CurrentStepAccept
-       if nAccept > length(Tout);
-           Tout = [Tout; zeros(chunk,1)];
-           Xout = [Xout; zeros(chunk,nx)];
-           Gout = [Gout; zeros(chunk,nx)];
-       end
-       Tout(nAccept,1) = t;
-       Xout(nAccept,:) = x.';
-       Gout(nAccept,:) = g.';
+    % Storage of variables for output % ex5
+    nAccept = info.nAccept;
+    if nAccept > length(Tout);
+       Tout = [Tout; zeros(chunk,1)];
+       Xout = [Xout; zeros(chunk,nx)];
     end
+    Tout(nAccept,1) = t;
+    Xout(nAccept,:) = x.';
 end
+info.nSlowConv = length(find(stats.SlowConv)); % carsten
 Tout = Tout(1:nAccept,1);
 Xout = Xout(1:nAccept,:);
-Gout = Gout(1:nAccept,:);
 
-% Helper functions
-    function performLU
-        % Perform the LU factorization
-        hgamma = h*gamma;
-        dRdx = dgdx - hgamma*dfdx;
-        [L,U,pivot] = lu(dRdx,'vector');
-        hLU = h;
-    end
-
-end
