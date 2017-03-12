@@ -166,6 +166,7 @@ while t<tf
     
     %=====================================================================
     % Storage of variables for output % ex5
+    info.nAccept = info.nAccept + 1;
     nAccept = info.nAccept;
     if nAccept > length(Tout);
        Tout = [Tout; zeros(chunk,1)];
