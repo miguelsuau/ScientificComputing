@@ -33,7 +33,6 @@ hrmax = 10;
 %========================================================================
 tspan = [t0 tf]; % carsten
 info = struct(...
-            'Method',    Method,  ... % carsten
             'nStage',    s,       ... % carsten
             'absTol',    absTol,  ... % carsten
             'relTol',    relTol,  ... % carsten
