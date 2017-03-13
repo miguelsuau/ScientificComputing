@@ -1,0 +1,33 @@
+\documentclass[main.tex]{subfiles}
+
+\section{The Test Problem and DOPRI54}
+
+In this first section we are going to implement a set of numerical methods for solving ordinary differential equations. Since the algorithms are only approximations to the real solution, we shall also test their accuracy and discuss their performance by comparing the results obtained when solving the two following initial value problems:
+
+EQUATIONS
+
+As a first approach, we are going to implement the Explicit Euler's method. The algorithm makes use of finite different methods to replace the derivatives in the differential equation. The independent variable is discretized and the solution is computed based on cosequtive approximations to the real function values.
+
+TALK ABOUT STEP LENGTH
+
+EQUATION FORWARD EULER
+
+Instead of using the previous iterate one could also look at future values to approximate a solution. This method is called backward or implicit Euler:
+
+EQUATION BACKWARD EULER
+
+However, for some problems the solution of the previous equation may require the use of numerical solvers, and thus the algorithm becomes computationally more demanding than the explicit Euler's method. We shall see in the next section the advantange of using this method.
+
+Besides, the trapezodial method can be seen as a combination of both methods:
+
+DESCRIBE TRAPEZOIDAL
+
+Figure \ref{sol_eulers} shows the solution of the two initial value problems given by explicit, implicit Euler and trapezoidal, along with the true solution. It is easy to see, especially in the graph on the right, that, since we base the solution at one point on previous approximations, the further the points are from the initial value the more inaccurate they become and the greater the distance to the true solution is. This distance is called global error, whilst the error made in every iteration is known as local error.
+
+
+
+
+
+
+
+ 

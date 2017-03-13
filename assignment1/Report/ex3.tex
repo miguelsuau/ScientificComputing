@@ -1,11 +1,11 @@
 \documentclass[main.tex]{subfiles}
 
 \section{Question 3}
+\subsection{Order conditions, coefficients for the error estimator and the Butcher tableau}
+Using the excerpt from the book provided in the lecture 10 folder we will write up the order conditions for an embedded Runge-Kutta method with
+3 stages. The solution will have order 3 and the embedded method used for error estimation will have order 2.
 
-Write up the order conditions for an embedded Runge-Kutta method with
-3 stages. The solution you advance must have order 3 and the embedded
-method used for error estimation must have order 2.
-
+Firstly the Butcher tableau for our ERK will have the following schema (following the lower triangular shape for the $a$ coefficients and $c_1 = 0$):
 \begin{table}[h]
     \centering
     \begin{tabular}{l | c c c }
@@ -18,47 +18,64 @@ method used for error estimation must have order 2.
         \hline
         $e$ & $d_1$ & $d_2$ & $d_3$
     \end{tabular}
-    \caption{Butcher's tableau schema for Runge-Kutta method with 3 stages.}
+    \caption{Butcher's tableau for ERK with 3 stages and embedded method.}
 \end{table}
-
-\begin{subequations}\label{eq:order_conds}
-Order conditions derived from Butcher's table:
+\begin{subequations}
+\\Order conditions (one for first order, one for second order and two for third order) derived from our Butcher tableau:
 \begin{align}
     b^T e &= 1 & &b_1 + b_2 + b_3 = 1 \\
     b^T C e &= \frac{1}{2} & &\underbrace{b_1 c_1}_{0} + b_2 c_2 + b_3 c_3 = \frac{1}{2} \\
     b^T C^2 e &= \frac{1}{3} & &\underbrace{b_1 c_1^2}_{0} + b_2 c_2^2 + b_3 c_3^2 = \frac{1}{3} \\
     b^T A C e &= \frac{1}{6} & &\underbrace{b_2 a_{21} c_1}_{0} + \underbrace{b_3 a_{31} c_1}_{0} + b_3 a_{32} c_2 = \frac{1}{6}
 \end{align}
-values of $c_2$ and $c_3$ will be set to $\frac{1}{4}$ and $1$ respecively. This leaves us with 6 unknown variables (3 $a$s and 3 $b$s) and only 4 equations so we will add the so called consistency equations.
-
+values of $c_2$ and $c_3$ will be set to $\frac{1}{4}$ and $1$ respecively. This leaves us with 6 unknown variables (3 $a$s and 3 $b$s) and only 4 equations so we will add the so called consistency conditions in order for the system to be solvable.
 \begin{align}
     c_2 &= a_{21} \\
     c_3 &= a_{31} + a_{32}
 \end{align}
 \end{subequations}
-Using Matlab to solve the system we get the following results: $b_1 = -\frac{1}{6}$, $b_2 = \frac{8}{9}$, $b_3 = \frac{5}{18}$, $a_{21} = \frac{1}{4}$, $a_{31} = -\frac{7}{5}$, $a_{32} = \frac{12}{5}$.
+Using Matlab to solve the system we get the following results: 
+\begin{center}
+    $b_1 = -\frac{1}{6}$, $b_2 = \frac{8}{9}$, $b_3 = \frac{5}{18}$, $a_{21} = \frac{1}{4}$, $a_{31} = -\frac{7}{5}$, $a_{32} = \frac{12}{5}$.
+\end{center}
 
-Next we will solve the system where $c_2$ and $c_3$ are known thus giving 2 equations with 3 unknowns. In order to find a solution $\widehat{b}_2$ is set to be $\frac{1}{2}$.
+Next we will solve the system defined for second order embedded method with one first order and one second order condition where $c_2$ and $c_3$ are known thus giving 2 equations with 3 unknowns. In order to find a solution $\widehat{b}_2$ is set to be $\frac{1}{2}$\footnote{According to the book excerpt given in lecture 10 folder.}.
 \begin{subequations}
 \begin{align}
     \widehat{b}_1 + \widehat{b}_2 + \widehat{b}_3 &= 1 \\
     \widehat{b}_2 c_2 + \widehat{b}_3 c_3 &= \frac{1}{2}
 \end{align}
 \end{subequations}
-The above system yields $\widehat{b}_1 = \frac{1}{8}$ and $\widehat{b}_3 = \frac{3}{8}$. Going back to the Butcher's tableau we know that last row ($d_1, d_2, d_3$) is just the difference of the previous two rows by definition.
+The above system yields $\widehat{b}_1 = \frac{1}{8}$ and $\widehat{b}_3 = \frac{3}{8}$. Going back to the Butcher's tableau we know that last row $e = (d_1, d_2, d_3)$ is just the difference of the previous two rows by definition.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{l | c c c }
-        0 & 0 & 0 & 0 \\
-        1/4 & 1/4 & 0 & 0 \\
-        1 & -7/5 & 12/5 & 0 \\
+    \begin{tabular}{r | C C C }
+        $c_1 = 0$ & 0 & 0 & 0 \\
+        $c_2 = \frac{1}{4}$ & 1/4 & 0 & 0 \\
+        $c_3 = 1$ & -7/5 & 12/5 & 0 \\
         \hline
         $x$ & -1/6 & 8/9 & 5/18 \\
-        $\widehat{x}$ & 1/8 & 1/2 & 3/8
+        $\widehat{x}$ & 1/8 & 1/2 & 3/8 \\
+        \hline
+        $e$ & -7/24 & 7/18 & -7/72
     \end{tabular}
     \caption{Butcher's tableau with error estimators for our method.}
+    \label{tbl:our-butcher}
 \end{table}
+
+% Test equation
+\subsection{Testing on the test equation}
+
+% Verify the order
+\subsection{Verifying the order}
+
+% Computing R(z) and stability plots
+\subsection{$\mathbf{R(\lambda h)}$ and stability plot}
+The solution to the test equation obtained by a Runge-Kutta method is defined as $x(t_n + h) = R(\lambda h) x(t_n)$ and $R(z) = 1 + z b^T ({I} - z {A})^{-1} e$. From the \nameref{tbl:our-butcher} $b$ vector and $A$ matrix are plugged in to $R(z)$ resulting in $R(z) = 1 + z + \frac{1}{2} z^2 + \frac{3}{18}z^3$ where $z = \lambda h$ for the third order method.
+
+% Van der pol and ode15s
+\subsection{Testinging on the Van der Pol problem and comparison with \texttt{ode15s}}
 
 % TODO:
 % 3. corresponding equations defining our method
