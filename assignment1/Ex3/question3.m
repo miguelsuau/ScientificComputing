@@ -38,8 +38,8 @@ hold off
 
 % TODO: Discuss how the local error (as a function of step size) should be
 % plotted - i.e. how many graphs? subplots?
-alpha = -5:0.01:5;
-beta = -5:0.01:5;
+alpha = -4:0.01:4;
+beta = -4:0.01:4;
 A = butcher.AT';
 b = butcher.b;
 c = butcher.c;
@@ -51,24 +51,24 @@ e = ones(size(A,1),1);
 
 for kreal = 1:nreal
     for kimag = 1:nimag
-    z = alpha(kreal) + 1i*beta(kimag);
-    tmp = (I-z*A)\e;
-    R = 1 + z*b'*tmp;
-    Ehat = z*d'*tmp;
-    f = exp(z);
-    E = R-f;
-    EhatmE = Ehat-E;
-    absR(kimag,kreal) = abs(R);
-    absEhatmE(kimag,kreal) = abs(EhatmE);
-    absEhat(kimag,kreal) = abs(Ehat);
-    absE(kimag,kreal) = abs(E);
-    absF(kimag,kreal) = abs(f);
+        z = alpha(kreal) + 1i*beta(kimag);
+        tmp = (I-z*A)\e;
+        R = 1 + z*b'*tmp;
+        Ehat = z*d'*tmp;
+        f = exp(z);
+        E = R-f;
+        EhatmE = Ehat-E;
+        absR(kimag,kreal) = abs(R);
+        absEhatmE(kimag,kreal) = abs(EhatmE);
+        absEhat(kimag,kreal) = abs(Ehat);
+        absE(kimag,kreal) = abs(E);
+        absF(kimag,kreal) = abs(f);
     end
 end
 
 figure
 fs = 14;
-subplot(221)
+subplot(1,2,1)
 imagesc(alpha,beta,absR,[0 1]);
 grid on
 colorbar
@@ -76,4 +76,33 @@ axis image
 axis xy
 xlabel('real','fontsize',fs);
 ylabel('imag','fontsize',fs);
-title('|R(z)|','fontsize',fs)
+title('3rd order |R(z)|','fontsize',fs)
+
+% embedded
+b = butcher.b - butcher.d; % bhat
+for kreal = 1:nreal
+    for kimag = 1:nimag
+        z = alpha(kreal) + 1i*beta(kimag);
+        tmp = (I-z*A)\e;
+        R = 1 + z*b'*tmp;
+        Ehat = z*d'*tmp;
+        f = exp(z);
+        E = R-f;
+        EhatmE = Ehat-E;
+        absR(kimag,kreal) = abs(R);
+        absEhatmE(kimag,kreal) = abs(EhatmE);
+        absEhat(kimag,kreal) = abs(Ehat);
+        absE(kimag,kreal) = abs(E);
+        absF(kimag,kreal) = abs(f);
+    end
+end
+
+subplot(1,2,2)
+imagesc(alpha,beta,absR,[0 1]);
+grid on
+colorbar
+axis image
+axis xy
+xlabel('real','fontsize',fs);
+ylabel('imag','fontsize',fs);
+title('Embedded |R(z)|','fontsize',fs)
