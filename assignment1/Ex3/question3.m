@@ -19,7 +19,7 @@ butcher.stages = 3;
 % Test equation
 addpath('../Ex1'); % if ran from Ex3 directory 
 tspan = [0; 10];
-n = 500; % change as needed
+n = 20; % change as needed
 x0 = 1;
 lambda = -1;
 
@@ -38,3 +38,42 @@ hold off
 
 % TODO: Discuss how the local error (as a function of step size) should be
 % plotted - i.e. how many graphs? subplots?
+alpha = -5:0.01:5;
+beta = -5:0.01:5;
+A = butcher.AT';
+b = butcher.b;
+c = butcher.c;
+d = butcher.d;
+nreal = length(alpha);
+nimag = length(beta);
+I = eye(size(A));
+e = ones(size(A,1),1);
+
+for kreal = 1:nreal
+    for kimag = 1:nimag
+    z = alpha(kreal) + 1i*beta(kimag);
+    tmp = (I-z*A)\e;
+    R = 1 + z*b'*tmp;
+    Ehat = z*d'*tmp;
+    f = exp(z);
+    E = R-f;
+    EhatmE = Ehat-E;
+    absR(kimag,kreal) = abs(R);
+    absEhatmE(kimag,kreal) = abs(EhatmE);
+    absEhat(kimag,kreal) = abs(Ehat);
+    absE(kimag,kreal) = abs(E);
+    absF(kimag,kreal) = abs(f);
+    end
+end
+
+figure
+fs = 14;
+subplot(221)
+imagesc(alpha,beta,absR,[0 1]);
+grid on
+colorbar
+axis image
+axis xy
+xlabel('real','fontsize',fs);
+ylabel('imag','fontsize',fs);
+title('|R(z)|','fontsize',fs)

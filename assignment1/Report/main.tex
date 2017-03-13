@@ -8,7 +8,11 @@
 \usepackage{tabularx}
 \usepackage{appendix}
 
-\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{amssymb} %für Zahlenset Symbole
+\usepackage{array}   % for \newcolumntype macro
+
+\usepackage{mathspec}
 \setmainfont{XCharter}
 \defaultfontfeatures{Ligatures=TeX}
 
@@ -18,8 +22,6 @@
 \usepackage{microtype}
 %\usepackage{lmodern}
 \usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb} %für Zahlenset Symbole
 %\usepackage[lmargin=25mm, rmargin=25mm, bmargin=20mm, tmargin=20mm]{geometry}
 \usepackage{float}
 \usepackage{siunitx}  % \unit[val]{dim}; fractions: {}{}!
@@ -39,6 +41,8 @@
 
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
+
+\newcolumntype{C}{>{$}c<{$}} % math-mode version of "l" column type
 
 
 \begin{document}
