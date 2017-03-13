@@ -66,6 +66,11 @@ The above system yields $\widehat{b}_1 = \frac{1}{8}$ and $\widehat{b}_3 = \frac
 
 % Test equation
 \subsection{Testing on the test equation}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/ex3_testequation}
+    \caption{Comparison with the test equation for different step sizes}
+\end{figure}
 
 % Verify the order
 \subsection{Verifying the order}
@@ -75,7 +80,7 @@ The above system yields $\widehat{b}_1 = \frac{1}{8}$ and $\widehat{b}_3 = \frac
 The solution to the test equation obtained by a Runge-Kutta method is defined as $x(t_n + h) = R(\lambda h) x(t_n)$ and $R(z) = 1 + z b^T ({I} - z {A})^{-1} e$. From the \nameref{tbl:our-butcher} vector $b$ and the $A$ matrix are plugged in to $R(z)$ resulting in \[R_m(z) = 1 + z + \frac{1}{2} z^2 + \frac{3}{18}z^3\] where $z = \lambda h$ for the third order method.
 The second order embedded method yields \[R_e(z) = z+ \frac{1}{2} z^2 + \frac{9}{40} z^3\] where $z = \lambda h$. Note that $R(z)$ can be calculated with Matlab's Symbolic Toolbox \\\texttt{syms z};\\ \texttt{R = 1 + z*b'*inv(eye(length(b)) - z*A)*ones(length(b),1)};\\ then \texttt{collect(R, z)} is used display powers of $z$ and the respective coefficients.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth,trim={0 3.5cm 0 3.5cm},clip]{../Figures/ex3_stabilityplot}
     \caption{Stability plots of the third order ERK with second order embedded method}
@@ -83,6 +88,13 @@ The second order embedded method yields \[R_e(z) = z+ \frac{1}{2} z^2 + \frac{9}
 
 % Van der pol and ode15s
 \subsection{Testinging on the Van der Pol problem and comparison with \texttt{ode15s}}
+Matlab's \texttt{ode15s} was used with the default ODE-options and user defined Jacobian, the error for our method with with step size of $10^{-3}$ is roughly around $10^{-8}$ and for step size $10^{-2}$ it is around $10^{-5}$. Even though our choice of $c_2 = 1/4$ might look strange, the method performs reasonably well.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,trim={180 0 155 0},clip]{../Figures/ex3_vanderpol_ode15s}
+    \caption{Comparison with \texttt{ode15s} on Van der Pol problem ($\mu=3$). Each row depicts different step size ($0.1$, $0.01$ and $0.001$) and the maximal error from ERK is shown in the plot title as well as on a reference line ($x_1$ - magenta, $x_2$ - blue).}
+\end{figure}
 
 % TODO:
 % 3. corresponding equations defining our method

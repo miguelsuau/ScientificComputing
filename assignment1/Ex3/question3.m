@@ -1,3 +1,6 @@
+close all
+clear all
+
 % Calculate our method's Butcher's tableau
 format rat
 f = @(x) [  x(1)+x(2)+x(3)-1;
@@ -19,90 +22,25 @@ butcher.stages = 3;
 % Test equation
 addpath('../Ex1'); % if ran from Ex3 directory 
 tspan = [0; 10];
-n = 20; % change as needed
 x0 = 1;
 lambda = -1;
 
-[T1,X1,Err1] = ExplicitRungeKutta(@TestEquation,tspan,x0,n,butcher,lambda);
-
-% Analytical solution
-T = linspace(tspan(1),tspan(2),n)';
-X = exp(lambda*T);
-
 % Plot method vs 'true' solution
-plot(T1,X1(:),'-g','LineWidth',2.5);
-hold on
-plot(T,X(:),'--r','LineWidth',2.5);
-legend('Analytical solution', 'Designed Runge-Kutta')
-hold off
-
-% TODO: Discuss how the local error (as a function of step size) should be
-% plotted - i.e. how many graphs? subplots?
-alpha = -4:0.01:4;
-beta = -4:0.01:4;
-A = butcher.AT';
-b = butcher.b;
-c = butcher.c;
-d = butcher.d;
-nreal = length(alpha);
-nimag = length(beta);
-I = eye(size(A));
-e = ones(size(A,1),1);
-
-for kreal = 1:nreal
-    for kimag = 1:nimag
-        z = alpha(kreal) + 1i*beta(kimag);
-        tmp = (I-z*A)\e;
-        R = 1 + z*b'*tmp;
-        Ehat = z*d'*tmp;
-        f = exp(z);
-        E = R-f;
-        EhatmE = Ehat-E;
-        absR(kimag,kreal) = abs(R);
-        absEhatmE(kimag,kreal) = abs(EhatmE);
-        absEhat(kimag,kreal) = abs(Ehat);
-        absE(kimag,kreal) = abs(E);
-        absF(kimag,kreal) = abs(f);
-    end
-end
-
+ns = [10 15 25 50];
 figure
-fs = 14;
-subplot(1,2,1)
-imagesc(alpha,beta,absR,[0 1]);
-grid on
-colorbar
-axis image
-axis xy
-xlabel('real','fontsize',fs);
-ylabel('imag','fontsize',fs);
-title('3rd order |R(z)|','fontsize',fs)
+format long
+for k=1:length(ns)
+    [T1,X1,Err1] = ExplicitRungeKutta(@TestEquation,tspan,x0,ns(k),butcher,lambda);
+    % Analytical solution
+    T = linspace(tspan(1),tspan(2),ns(k))';
+    X = exp(lambda*T);
 
-% embedded
-b = butcher.b - butcher.d; % bhat
-for kreal = 1:nreal
-    for kimag = 1:nimag
-        z = alpha(kreal) + 1i*beta(kimag);
-        tmp = (I-z*A)\e;
-        R = 1 + z*b'*tmp;
-        Ehat = z*d'*tmp;
-        f = exp(z);
-        E = R-f;
-        EhatmE = Ehat-E;
-        absR(kimag,kreal) = abs(R);
-        absEhatmE(kimag,kreal) = abs(EhatmE);
-        absEhat(kimag,kreal) = abs(Ehat);
-        absE(kimag,kreal) = abs(E);
-        absF(kimag,kreal) = abs(f);
-    end
+    subplot(2,length(ns)/2,k)
+    plot(T1,X1(:),'-og','LineWidth',1.3);
+    hold on
+    plot(T,X,'--or','LineWidth',0.5);
+    legend('Designed Runge-Kutta', 'Analytical solution')
+    xlabel('time')
+    title(sprintf('Test equation (n = %d, x_0 = %d, \\lambda = %d)', ns(k), x0, lambda))
 end
 
-subplot(1,2,2)
-imagesc(alpha,beta,absR,[0 1]);
-grid on
-colorbar
-axis image
-axis xy
-xlabel('real','fontsize',fs);
-ylabel('imag','fontsize',fs);
-title('Embedded |R(z)|','fontsize',fs)
