@@ -1,11 +1,11 @@
-function [T,Y] = Trapezoidal_AdaptiveStep(...
+function [T,Y,info] = Trapezoidal_AdaptiveStep( ...
                  funJac,tspan,n,y0,abstol,reltol,type,varargin)
 
 switch type
     case 'asymptotic'
-        a = 1/3; b = 0; c = 0;
+        ki = 1/3; kp = 0;
     case 'PI'
-        a = 1/6; b = 1/6; c = 1/2;
+        ki = 0.4/3; kp = 0.3/3;
 end
 % Controller parameters
 epstol = 0.8;
@@ -21,8 +21,12 @@ Y = y0;
 T(1) = tspan(1);
 
 % Compute initial step size
-h0 = (tspan(2)-tspan(1))/(n-1);
-hn = h0;
+hn = (tspan(2)-tspan(1))/(n-1);
+
+% Information for testing
+funeval = 0;
+hvec = [];
+rvec = [];
 
 while T(end) < tspan(2)
     
@@ -32,8 +36,7 @@ while T(end) < tspan(2)
     end
     
     f = feval(funJac,T(end),Y(:,end),varargin{:});
-    
-    hp = hn;
+    funeval = funeval + 1;
     rp = epstol;
     
     AcceptStep = false;
@@ -46,9 +49,9 @@ while T(end) < tspan(2)
         yinit = Y(:,end) + h*f;
 
         % Solve implicit equation
-        Y1 = NewtonsTrapezoidal(funJac, ...
+        [Y1,funevalN] = NewtonsTrapezoidal(funJac, ...
                      T(end),Y(:,end),h,yinit,tol,maxit,varargin{:});
-        
+        funeval = funeval + funevalN;
         % Step size h/2
         
         hm = 0.5*h;
@@ -56,15 +59,16 @@ while T(end) < tspan(2)
         
         % Compute first half step
         yinit = Y(:,end) + hm*f;
-        Ym = NewtonsTrapezoidal(funJac,...
+        [Ym,funevalN] = NewtonsTrapezoidal(funJac,...
              T(end),Y(:,end),hm,yinit,tol,maxit,varargin{:});
-        
+       
         % Compute second half step
         fm = feval(funJac,Tm,Ym,varargin{:});
+        funeval = funeval + funevalN + 1;
         yinit = Ym + hm*fm;
-        Yhat = NewtonsTrapezoidal(funJac,...
+        [Yhat,funevalN] = NewtonsTrapezoidal(funJac,...
                Tm,Ym,hm,yinit,tol,maxit,varargin{:});
-        
+        funeval = funeval + funevalN;
         % Error estimation
         e = Y1 - Yhat;
         r = max(abs(e)./max(abstol,abs(Yhat).*reltol));
@@ -73,15 +77,21 @@ while T(end) < tspan(2)
         AcceptStep = r <=1;
         
         % step size controller (Asymptotic or second order PI)
-        hn = max(facmin,min((epstol/r)^a*(epstol/rp)^b*(h/hp)^-c,facmax))*h;
+        hn = max(facmin,min((epstol/r)^ki*(rp/r)^kp,facmax))*h;
         rp = r;
-        hp = h;
+        hvec(end+1) = h;
+        rvec(end+1) = r;
+    
     end
     
     T(end+1) = T(end)+h;    
     Y(:,end+1) = Yhat;
     
 end
-
 Y = Y';
+info.funeval = funeval;
+info.naccept = length(T);
+info.nreject = length(hvec) - length(T) + 1;
+info.hvec = hvec;
+info.rvec = rvec;
 end
