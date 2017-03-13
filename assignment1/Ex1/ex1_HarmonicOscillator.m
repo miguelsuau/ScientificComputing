@@ -5,7 +5,7 @@ close all
 
 
 tspan = [0; 10];
-h = 0.0017;
+h = 0.1;
 n = ceil((tspan(2) - tspan(1))/h + 1);
 x0 = [1; 0];
 
@@ -40,7 +40,7 @@ figure
 plot(T,X,'--k');
 hold on
 plot(T1,X1(:,1),'LineWidth',1.5);
-plot(T2,X3(:,1),'LineWidth',1.5);
+plot(T2,X2(:,1),'LineWidth',1.5);
 
 legend('Analytical solution','Explicit Euler','Implicit Euler','location','southwest')
 
@@ -54,7 +54,7 @@ Gerr = zeros(6,10);
 for i=1:10
     tspan = [0; 10];
     n = ceil((tspan(2) - tspan(1))/h(i) + 1);
-    n2 = ceil((tspan(2) - tspan(1))/h(i)*2 + 1);
+    n2 = ceil((tspan(2) - tspan(1))/h(i)*0.5 + 1);
     x0 = [1; 0];
 
     % Analytical Solution
@@ -67,7 +67,7 @@ for i=1:10
     [T1Double,X1Double] = ExplicitEuler(@HarmonicOscillator,tspan,n2,x0);
     
     Lerr(1,i) = abs(X(2) - X1(2,1));
-    LerrHat(1,i) = abs(X1Double(2,1) - X1(2,1));
+    LerrHat(1,i) = abs(X1Double(3,1) - X1(2,1));
     Gerr(1,i) = abs(X(T == 10) - X1(abs(T1 - 10) <= 1e-3,1));
     
     % Implicit Euler
@@ -75,7 +75,7 @@ for i=1:10
     [T2Double,X2Double] = ImplicitEuler(@HarmonicOscillator,tspan,n2,x0);
     
     Lerr(2,i) = abs(X(2) - X2(2,1));
-    LerrHat(2,i) = abs(X2Double(2,1) - X2(2,1));
+    LerrHat(2,i) = abs(X2Double(3,1) - X2(2,1));
     Gerr(2,i) = abs(X(T == 10) - X2(abs(T2 - 10) <= 1e-3,1));
     
     % Trapezoidal
@@ -83,7 +83,7 @@ for i=1:10
     [T3Double,X3Double] = Trapezoidal(@HarmonicOscillator,tspan,n2,x0);
     
     Lerr(3,i) = abs(X(2) - X3(2,1));
-    LerrHat(3,i) = abs(X3Double(2,1) - X3(2,1));
+    LerrHat(3,i) = abs(X3Double(3,1) - X3(2,1));
     Gerr(3,i) = abs(X(T == 10) - X3(abs(T3 - 10) <= 1e-3,1));
     
     % Classical Runge-Kutta
@@ -92,7 +92,7 @@ for i=1:10
                           @HarmonicOscillator,tspan,n2,x0);
     
     Lerr(4,i) = abs(X(2) - X4(2,1));
-    LerrHat(4,i) = abs(X4Double(2,1) - X4(2,1));
+    LerrHat(4,i) = abs(X4Double(3,1) - X4(2,1));
     Gerr(4,i) = abs(X(T == 10) - X4(abs(T4 - 10) <= 1e-3,1));
     
     % DOPRI54

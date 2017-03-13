@@ -18,7 +18,7 @@ reltol = 10e-8;
 
 %% Trapezoidal Adaptive Step
 [T3,Y3] = Trapezoidal_AdaptiveStep(...
-          @VanderPolfunjac,tspan,n,y0,abstol,reltol,mu);
+          @VanderPolfunjac,tspan,n,y0,abstol,reltol,'PI',mu);
 
 plot(T1,Y1(:,1))
 hold on

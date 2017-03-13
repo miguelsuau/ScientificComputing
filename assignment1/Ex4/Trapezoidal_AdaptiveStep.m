@@ -1,6 +1,12 @@
 function [T,Y] = Trapezoidal_AdaptiveStep(...
-                 funJac,tspan,n,y0,abstol,reltol,varargin)
+                 funJac,tspan,n,y0,abstol,reltol,type,varargin)
 
+switch type
+    case 'asymptotic'
+        a = 1/3; b = 0; c = 0;
+    case 'PI'
+        a = 1/6; b = 1/6; c = 1/2;
+end
 % Controller parameters
 epstol = 0.8;
 facmin = 0.1;
@@ -27,7 +33,9 @@ while T(end) < tspan(2)
     
     f = feval(funJac,T(end),Y(:,end),varargin{:});
     
-    h = h0;
+    hp = hn;
+    rp = epstol;
+    
     AcceptStep = false;
     while ~ AcceptStep
         h = hn;
@@ -64,8 +72,10 @@ while T(end) < tspan(2)
         % Check conditon
         AcceptStep = r <=1;
         
-        % Asymptotic step size controller
-        hn = max(facmin,min(sqrt(epstol/r),facmax))*h;
+        % step size controller (Asymptotic or second order PI)
+        hn = max(facmin,min((epstol/r)^a*(epstol/rp)^b*(h/hp)^-c,facmax))*h;
+        rp = r;
+        hp = h;
     end
     
     T(end+1) = T(end)+h;    
