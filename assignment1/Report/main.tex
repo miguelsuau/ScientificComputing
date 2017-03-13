@@ -38,6 +38,46 @@
 %					\begin{document}; \end{document}
 %\usepackage[noabbrev]{cleveref}	  % includes type of ref before ref number
 
+\usepackage{forest}
+\forestset{
+  */.style={
+    delay+={append={[]},}
+  },
+  rooted tree/.style={
+    for tree={
+      grow'=90,
+      parent anchor=center,
+      child anchor=center,
+      s sep=2.5pt,
+      if level=0{
+        baseline
+      }{},
+      delay={
+        if content={*}{
+          content=,
+          append={[]}
+        }{}
+      }
+    },
+    before typesetting nodes={
+      for tree={
+        circle,
+        fill,
+        minimum width=3pt,
+        inner sep=0pt,
+        child anchor=center,
+      },
+    },
+    before computing xy={
+      for tree={
+        l=5pt,
+      }
+    }
+  }
+}
+\usepackage{xparse}
+\DeclareDocumentCommand\rootedtree{o}{\Forest{rooted tree [#1]}}
+
 \usepackage{hyperref}
 \hypersetup{colorlinks=true}
 
