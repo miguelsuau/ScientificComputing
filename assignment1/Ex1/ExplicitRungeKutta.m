@@ -1,4 +1,4 @@
-function [Ts,Ys,Err] = ExplicitRungeKutta(fun,tspan,y0,n,butcher,varargin)
+function [Ts,Ys,Err,info] = ExplicitRungeKutta(fun,tspan,y0,n,butcher,varargin)
 % Generic algorithm for explicit Runge-Kutta methods
 
 % Extract Butcher Tableau
@@ -34,17 +34,22 @@ y = y0;
 Ts(1) = t;
 Ys(1,:) = y';
 
+% Info
+funeval = 0;
+
 for i = 1:(n-1)
     % First stage
     T(1) = t;
     Y(:,1) = y;
     F(:,1) = feval(fun,T(1),Y(:,1),varargin{:});
+    funeval = funeval + 1;
     
     % Following stages
     for j = 2:s
         T(j) = t + hc(j);
         Y(:,j) = y + F(:,1:j-1)*hAT(1:j-1,j);
         F(:,j) = feval(fun,T(j),Y(:,j),varargin{:});
+        funeval = funeval + 1;
     end
     
     % Update t and y and calulate the error with the embeded method
@@ -58,4 +63,7 @@ for i = 1:(n-1)
     Err(i+1,:) = err';
     
 end
+
+info.nFun = funeval;
+
 end
