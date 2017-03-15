@@ -27,20 +27,32 @@ lambda = -1;
 
 % Plot method vs 'true' solution
 ns = [10 15 25 50];
+hs = [0.1 0.01 0.001];
+columns = 2;
 figure
 format long
-for k=1:length(ns)
-    [T1,X1,Err1] = ExplicitRungeKutta(@TestEquation,tspan,x0,ns(k),butcher,lambda);
+for k=0:length(hs)-1
+    rows = length(hs);
+    n = ((tspan(2)-tspan(1))/hs(k+1))+1;
+    [T1,X1,Err1] = ExplicitRungeKutta(@TestEquation,tspan,x0,n,butcher,lambda);
     % Analytical solution
-    T = linspace(tspan(1),tspan(2),ns(k))';
+    T = linspace(tspan(1),tspan(2),n)';
     X = exp(lambda*T);
 
-    subplot(2,length(ns)/2,k)
-    plot(T1,X1(:),'-og','LineWidth',1.3);
+    subplot(rows,columns,k*columns+1)
+    plot(T1,X1(:),'-g','LineWidth',1.3);
     hold on
-    plot(T,X,'--or','LineWidth',0.5);
+    plot(T,X,'--r','LineWidth',0.5);
     legend('Designed Runge-Kutta', 'Analytical solution')
     xlabel('time')
-    title(sprintf('Test equation (n = %d, x_0 = %d, \\lambda = %d)', ns(k), x0, lambda))
+    title(sprintf('Test equation ($h = 10^{%0.0f}$, $x_0 = %d$, $\\lambda = %d$)', log10(hs(k+1)), x0, lambda), 'Interpreter', 'latex')
+    
+    subplot(rows,columns,k*columns+2)
+    err = abs(X - X1);
+    maxerr = max(err);
+    plot(err)
+    hold on
+    xlim([0 length(err)-1]); title(sprintf('Error_{MAX} = %0.2e', maxerr));
+    refline([0 maxerr]);
 end
 

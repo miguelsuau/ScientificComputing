@@ -31,25 +31,23 @@ for kreal = 1:nreal
         f = exp(z);
         E = R-f;
         EhatmE = Ehat-E;
-        absR(kimag,kreal) = abs(R);
-        absEhatmE(kimag,kreal) = abs(EhatmE);
-        absEhat(kimag,kreal) = abs(Ehat);
-        absE(kimag,kreal) = abs(E);
-        absF(kimag,kreal) = abs(f);
+        absR(kimag,kreal) = abs(R); % stability plot R(z)
+        absEhatmE(kimag,kreal) = abs(EhatmE); % err's est err E(z) - (R(z) - exp(z))
+        absEhat(kimag,kreal) = abs(Ehat); % est err E(z)
+        absE(kimag,kreal) = abs(E); % true err R(z) - exp(z)
+        absF(kimag,kreal) = abs(f); % exp(z)
     end
 end
 
 figure
-fs = 14;
-subplot(1,2,1)
-imagesc(alpha,beta,absR,[0 1]);
-grid on
-colorbar
-axis image
-axis xy
-xlabel('real','fontsize',fs);
-ylabel('imag','fontsize',fs);
-title('3rd order |R(z)|','fontsize',fs)
+subplot(4,2,1)
+implot(alpha, beta, absR, '3rd order |R(z)| (stability plot)')
+subplot(4,2,3)
+implot(alpha, beta, absEhat, '3rd order |E(z)| (est. error)')
+subplot(4,2,5)
+implot(alpha, beta, absE, '3rd order |R(z) - exp(z)| (true error)')
+subplot(4,2,7)
+implot(alpha, beta, absEhatmE, '3rd order |E(z) - R(z) + exp(z)|')
 
 % embedded
 b = b - d; % bhat
@@ -70,12 +68,11 @@ for kreal = 1:nreal
     end
 end
 
-subplot(1,2,2)
-imagesc(alpha,beta,absR,[0 1]);
-grid on
-colorbar
-axis image
-axis xy
-xlabel('real','fontsize',fs);
-ylabel('imag','fontsize',fs);
-title('Embedded |R(z)|','fontsize',fs)
+subplot(4,2,2)
+implot(alpha, beta, absR, 'Embedded |R(z)| (stability plot)')
+subplot(4,2,4)
+implot(alpha, beta, absEhat, 'Embedded |E(z)| (est. error)')
+subplot(4,2,6)
+implot(alpha, beta, absE, 'Embedded |R(z) - exp(z)| (true error)')
+subplot(4,2,8)
+implot(alpha, beta, absEhatmE, 'Embedded |E(z) - R(z) + exp(z)|')

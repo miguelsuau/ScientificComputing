@@ -1,6 +1,6 @@
 \documentclass[main.tex]{subfiles}
 
-\section{Question 3}
+\section{Design your own Explicit Runge-Kutta Method}
 \subsection{Order conditions, coefficients for the error estimator and the Butcher tableau}
 Using the excerpt from the book provided in the lecture 10 folder we will write up the order conditions for an embedded Runge-Kutta method with
 3 stages. The solution will have order 3 and the embedded method used for error estimation will have order 2.
@@ -66,24 +66,36 @@ The above system yields $\widehat{b}_1 = \frac{1}{8}$ and $\widehat{b}_3 = \frac
 
 % Test equation
 \subsection{Testing on the test equation}
+Figure \ref{fig:ex3testeq} depicts designed method and the analytical solution for various step sizes ($0.1$, $0.01$, $0.001$) in the rows along with absolute error (difference between true value of the test equation and the result of the designed method), the maximum error is shown in the plot's title as well as in a reference line. From the previously mentioned figure it is clear that the designed method works as expected.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{../Figures/ex3_testequation}
     \caption{Comparison with the test equation for different step sizes}
+    \label{fig:ex3testeq}
 \end{figure}
 
 % Verify the order
 \subsection{Verifying the order}
+Ten step sizes between $10^{-3}$ and $10^{-1}$ spaced logarithmicaly were chosen to plot the local error as a function of the step size. Loglog plot \ref{fig:ex3loglog} along with dashed help lines is used in order to verify the order of the method designed. It can be seen that both entries are parallel with the help lines for $\mathcal{O}(h^3)$ and $\mathcal{O}(h^2)$ respectively, confirming that the method designed meets the order criteria specified in the beginning of this section.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/ex3_ERK23localerror}
+    \caption{Loglog plot of the local error of designed ERK method (blue) and the returned error of the method (red, local error estimate) with help lines}
+    \label{fig:ex3loglog}
+\end{figure}
 
 % Computing R(z) and stability plots
 \subsection{$\mathbf{R(\lambda h)}$ and stability plot}
 The solution to the test equation obtained by a Runge-Kutta method is defined as $x(t_n + h) = R(\lambda h) x(t_n)$ and $R(z) = 1 + z b^T ({I} - z {A})^{-1} e$. From the \nameref{tbl:our-butcher} vector $b$ and the $A$ matrix are plugged in to $R(z)$ resulting in \[R_m(z) = 1 + z + \frac{1}{2} z^2 + \frac{3}{18}z^3\] where $z = \lambda h$ for the third order method.
 The second order embedded method yields \[R_e(z) = z+ \frac{1}{2} z^2 + \frac{9}{40} z^3\] where $z = \lambda h$. Note that $R(z)$ can be calculated with Matlab's Symbolic Toolbox \\\texttt{syms z};\\ \texttt{R = 1 + z*b'*inv(eye(length(b)) - z*A)*ones(length(b),1)};\\ then \texttt{collect(R, z)} is used display powers of $z$ and the respective coefficients.
 
+The difference in stability of the designed and embedded method can be seen in figure \ref{fig:ex3stab}. Although the plots look similar, the embedded method's stability region is slightly smaller, as well as all other metrics.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,trim={0 3.5cm 0 3.5cm},clip]{../Figures/ex3_stabilityplot}
-    \caption{Stability plots of the third order ERK with second order embedded method}
+    \includegraphics[width=\textwidth,trim={0 0.5cm 0 0.5cm},clip]{../Figures/ex3_stabilityplot}
+    \caption{Stability plots of the third order ERK with second order embedded method. In order for the method to be A stable the whole left half plane has to be $|R(z)|<1$ (i.e. in graphical representation shown not brightly yellow) which clearly it is not.}
+    \label{fig:ex3stab}
 \end{figure}
 
 % Van der pol and ode15s
