@@ -43,7 +43,7 @@ l8 = plot(T3,Y3(:,2));
 l9 = plot(T4,Y4(:,2));
 l10 = plot(T5,Y5(:,2));
 axis([0 50 -Inf Inf])
-hL = legend([l1,l2,l3,l4,l5],{'Explicit Euler','Implicit Euler','Trapezoidal','Classic Runge Kutta','DOPRI54 (5)'});
+hL = legend([l1,l2,l3,l4,l5],{'Explicit Euler','Implicit Euler','Trapezoidal','Runge Kutta','DOPRI54 (5)'});
 
 %% MU = 100
 
