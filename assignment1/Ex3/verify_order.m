@@ -14,7 +14,7 @@ b1 = x(1); b2 = x(2); b3 = x(3); a21 = x(4); a31 = x(5); a32 = x(6);
 butcher.AT = [0 0 0; a21 0 0; a31 a32 0]';
 butcher.b  = [b1 b2 b3]';
 butcher.c  = [0 1/3 1]';
-butcher.d  = [b1 b2 b3]' - [1/8 1/2 3/8]'; % b - bhat
+butcher.d  = [1/8 1/2 3/8]' - [b1 b2 b3]'; % d  = bhat-b;
 butcher.bhat = [1/8 1/2 3/8]';
 butcher.stages = 3;
 
@@ -44,4 +44,5 @@ for i=1:hs
 end
 figure
 loglog(h,Lerr,'-b',h,h.^(3+1),'-.b',h,LEerr,'-r',h,h.^(2+1),'-.r')
-legend('Designed Runge-Kutta', 'O(h^3) help line', 'Designed Runge-Kutta (error)', 'O(h^2) help line')
+l=legend('Designed Runge-Kutta', '$\mathcal{O}(h^4)$ help line', 'Designed Runge-Kutta (error)', '$\mathcal{O}(h^3)$ help line');
+l.Interpreter = 'latex';

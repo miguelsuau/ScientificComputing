@@ -10,7 +10,7 @@ b  = AT(:,3);
 bhat = [    (6*gamma-1)/(12*gamma); ...
             1/(12*gamma*(1-2*gamma)); ...
             (1-3*gamma)/(3*(1-2*gamma))    ];
-d  = b-bhat;
+d  = bhat-b;
 s = 3;
 
 %% Stability related calculations

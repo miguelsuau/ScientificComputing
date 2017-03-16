@@ -14,9 +14,9 @@ b = [
         5/18;    
 ];
 c = [0; 1/3; 1];
-d = [ -7/24;    
-       7/18;    
-      -7/72 ];
+d = [ 7/24;    
+      -7/18;    
+      7/72 ];
 nreal = length(alpha);
 nimag = length(beta);
 I = eye(size(A));
@@ -50,7 +50,7 @@ subplot(4,2,7)
 implot(alpha, beta, absEhatmE, '3rd order |E(z) - R(z) + exp(z)|')
 
 % embedded
-b = b - d; % bhat
+b = [1/8; 1/2; 3/8]; % bhat
 for kreal = 1:nreal
     for kimag = 1:nimag
         z = alpha(kreal) + 1i*beta(kimag);
