@@ -14,8 +14,7 @@ facmin = 0.1;
 facmax = 5.0;
 
 % Compute initial step size
-h0 = (tspan(2)-tspan(1))/(n-1);
-hn = h0;
+hn = (tspan(2)-tspan(1))/(n-1);
 
 % Number of stages
 s = 4; 

@@ -56,7 +56,7 @@ while T(end) < tspan(2)
         % Check condition
         AcceptStep = r <= 1;
         
-        % step size controller (Asymptotic or second order PI)
+        % step size controller (Asymptotic or PI)
         hn = max(facmin,min((epstol/r)^ki*(rp/r)^kp,facmax))*h;
         rp = r;
         
