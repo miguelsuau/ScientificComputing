@@ -14,7 +14,7 @@ x(0) = 1 \qquad
 \begin{equation}
 \ddot{x} = -x(t) \qquad
 x(0) = 1 \qquad
-\dot{x(0)} = 0
+\dot{x}(0) = 0
 \label{eq:HarmonicOscillator}
 \end{equation}
 
@@ -63,7 +63,7 @@ Figure \ref{fig:sol1} shows the solution from $t = 0$ to $t = 10$ of the two ini
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/solution1}
+    \includegraphics[width=\textwidth]{../Figures/solution1}
     \caption{Explicit, Implicit Euler and Trapezoidal method solution to test equation and harmonic oscillator for h = 0.345}
     \label{fig:sol1}
 \end{figure}
@@ -76,9 +76,9 @@ Even though we see in figure \ref{fig:sol1} that the solution found by the trape
 
 The classical Runge-Kutta method and its higher order variations play with the concept introduced in last section to create finer approximations to the solution. Concretetly the classical Runge-Kutta method takes four stages to compute a weighted avarage of four different slope estimates. The slope estimation at the fourth stage will be based in the information obtained in the three previous stages.
 
-\begin{equation}
-\begin{align*}
-T_1 &= t_n &
+\begin{equation}\label{eq:ClassicRungeKutta}
+\begin{aligned}
+T_1 &= t_n &\qquad
 X_1 &= x_n \\
 T_2 &= t_n + \frac{1}{2} h &
 X_2 &= x_n + \frac{1}{2} h f(T_1,X_1) \\
@@ -86,10 +86,9 @@ T_3 &= t_n + \frac{1}{2} h &
 X_3 &= x_n + \frac{1}{2} h f(T_2,X_2) \\
 T_4 &= t_n + h &
 X_4 &= x_n + h f(T_3,X_3) \\
-t_{n+1} = t_n + h \\
-x_{n+1} = x_n + h (\frac{1}{6} f(T_1,X_1) + \frac{1}{2}  f(T_2,X_2) + \frac{1}{2} f(T_3,X_3) + \frac{1}{6} f(T_4,X_4))
-\end{align*}
-\label{eq:ClassicRungeKutta}
+t_{n+1} &= t_n + h \span \span \\
+x_{n+1} &= x_n + h (\frac{1}{6} f(T_1,X_1) + \frac{1}{2}  f(T_2,X_2) + \frac{1}{2} f(T_3,X_3) + \frac{1}{6} f(T_4,X_4)) \span \span
+\end{aligned}
 \end{equation}
 
 Equation \ref{eq:ClassicRungeKutta} reveals that since this is an explicit method there is no need for a numerical solver. The coefficients and weights of these equations are often collected in the Butcher's Tableu. This is described more deeply in section 3.
@@ -102,7 +101,7 @@ It is easy to see in figure \ref{fig:sol1}, especially in the bottom graph, that
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/GlobalErrorTest}
+    \includegraphics[width=\textwidth]{../Figures/GlobalErrorTest}
     \caption{Explicit, Implicit Euler and Trapezoidal method global errors in test equation}
     \label{fig:global1}
 \end{figure}
@@ -116,7 +115,7 @@ x(t) = cos(t)
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/GlobalErrorTest2}
+    \includegraphics[width=\textwidth]{../Figures/GlobalErrorTest2}
     \caption{Explicit, Implicit Euler and Trapezoidal method global errors in harmonic oscillator}
     \label{fig:global2}
 \end{figure}
@@ -127,7 +126,7 @@ Why is not good to use global error??
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/LocalErrorTest1}
+    \includegraphics[width=\textwidth]{../Figures/LocalErrorTest1}
     \caption{Explicit, Implicit Euler and Trapezoidal method local errors in test equation}
     \label{fig:LocalErrorTest1}
 \end{figure}
@@ -136,7 +135,7 @@ On the other hand the local error at time $t = t_0 + h$ is shown in figure \ref{
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/LocalErrorTest2}
+    \includegraphics[width=\textwidth]{../Figures/LocalErrorTest2}
     \caption{Explicit, Implicit Euler and Trapezoidal method local errors in harmonic oscillator}
     \label{fig:LocalErrorTest2}
 \end{figure}
@@ -153,7 +152,7 @@ More sophisticated algorithms, such as DOPRI54, use embbeded methods of lower or
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/LocalEstimateTest1}
+    \includegraphics[width=\textwidth]{../Figures/LocalEstimateTest1}
     \caption{Explicit, Implicit Euler and Trapezoidal method local error estimates in test equation}
     \label{fig:Estimate1}
 \end{figure}
@@ -162,7 +161,7 @@ The local error estimates are plotted along with the true errors in figure \ref{
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,clip]{../Figures/LocalEstimateTest2}
+    \includegraphics[width=\textwidth]{../Figures/LocalEstimateTest2}
     \caption{Explicit, Implicit Euler and Trapezoidal method local error estimates in harmonic oscillator}
     \label{fig:Estimate2}
 \end{figure}
