@@ -7,7 +7,7 @@ Since we already know how to estimate the local error (step doubling or embedded
 
 There are many ways one can control and update the step size. In our case we will make use of asymptotic and PI controllers. The former makes the update taking into account just the current value of the error, while the latter also relies on the previous estimation.
 
-We have tested the five different methods for different values of the absolute and relative tolerances. The results using an asymptotic controller with relative and absolute tolerance of $10^{-3}$ are gathered in table \ref{tab:StepSize}.
+We have tested the five different methods for different values of the absolute and relative tolerances. The results using an asymptotic controller with relative and absolute tolerance of $10^{-3}$ are gathered in table \ref{tab:tol10e3}.
 
 
 \begin{table}
@@ -22,8 +22,8 @@ Runge-Kutta 4  & 10949  & 650  & 381 & \\
 DROPI54        & 1749 & 178  & 85  & \\
 \hline \hline 
 \end{tabular}
-\label{tab:tol10e3}
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using an asymptotic controller}
+\label{tab:tol10e3}
 \end{table}
 
 We see in table \ref{tab:tol10e3} that the number of function evaluations for the implicit methods is usually high. The reason is that this methods require a numerical solver, in this case Newton's method. It is also important to notice that, since DROPI54 uses an embedded method to estimate the error, the number of function evaluations is lower than for the rest of the methods, which compute those estimates by step doubling.
@@ -41,8 +41,8 @@ Runge-Kutta 4  & 67155  & 6056  & 55  & \\
 DROPI54        & 3487   & 380   & 139 & \\
 \hline \hline 
 \end{tabular}
-\label{tab:tol10e5}
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using an asymptotic controller}
+\label{tab:tol10e5}
 \end{table}
 
 \begin{table}
@@ -57,8 +57,8 @@ Runge-Kutta 4  & 69431  & 6062  & 276 & \\
 DROPI54        & 5734   & 383   & 510 & \\
 \hline \hline 
 \end{tabular}
-\label{tab:tol10e5PI}
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using a PI controller}
+\label{tab:tol10e5PI}
 \end{table}
 
 We have also collected the results obtained for both asymptotic and PI controller with absolute and relative tolerances of $10^{-5}$ in tables \ref{tab:tol10e5} and \ref{tab:tol10e5PI}. The results show that there is not much difference between the two updating methods apart from the fact that PI takes a few more steps than the asymptotic controller. The top left graph reveals how for all the accepted points the residual coefficient is below 1 which corresponds to the tolerance specified, while all points above the threshold are rejected. 
@@ -75,8 +75,8 @@ Runge-Kutta 4  & 2118392 & 192553 & 32  & \\
 DROPI54        & 13772    & 1389  & 676 & \\
 \hline \hline 
 \end{tabular}
-\label{tab:tol10e8}
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using a PI controller}
+\label{tab:tol10e8}
 \end{table} 
 
 Table \ref{tab:tol10e8} shows the values obtained for absolute and relative tolerances of $10^{-8}$ with a PI controller. In this case the number of steps required for all methods except DOPRI54 is extremely large. That is why for such small tolerances high order methods are useful in order to prevent long run time and increase the computing performance.
