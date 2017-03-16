@@ -102,7 +102,7 @@ for i=1:10
     [T3Double,X3Double] = Trapezoidal(@TestEquation,tspan,n2,x0,lambda);
     
     Lerr(3,i) = abs(X(2) - X3(2));
-    LerrHat(3,i) = 4/3*abs(X3Double(3) - X3(2));
+    LerrHat(3,i) = 3/4*abs(X3Double(3) - X3(2));
     Gerr(3,i) = abs(X(T == 10) - X3(abs(T3 - 10) <= 1e-3));
     
     % Classical Runge-Kutta
@@ -123,7 +123,7 @@ for i=1:10
                
     Lerr(5,i) = abs(X(2) - X5(2));
     LerrHat(5,i) = abs(Err5(2));
-    Gerr(5,i) = abs(X(T == 10) - X5(abs(T5 - 10) <= 1e-3));
+    Gerr(5,i) = abs(X(T == 10) - X5(abs(T5 - 10) <= 1e-4));
     
     % DOPRI54 order 4
     butcher.b = [5179/57600; 0; 7571/16695; 393/640;
@@ -133,7 +133,7 @@ for i=1:10
     
     Lerr(6,i) = abs(X(2) - X6(2));
     LerrHat(6,i) = abs(Err6(2));
-    Gerr(6,i) = abs(X(T == 10) - X6(abs(T6 - 10) <= 1e-3));
+    Gerr(6,i) = abs(X(T == 10) - X6(abs(T6 - 10) <= 1e-4));
     
 end
 figure
