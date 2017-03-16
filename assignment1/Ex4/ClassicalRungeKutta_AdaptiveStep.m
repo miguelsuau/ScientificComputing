@@ -111,22 +111,22 @@ while Ts(end) < tspan(2)
         
         % Update yhat
         yhat = ym + hm*(1/6*Fm(:,1) + 1/3*Fm(:,2) + 1/3*Fm(:,3) + 1/6*Fm(:,4));
-        
+       
         % Error estimation
         e = y1 - yhat;
-        r = max(abs(e)./max(abstol,abs(yhat).*reltol));
-        
+        r = max(abs(e)./max(abstol,abs(yhat).*reltol));        
         % Check condition
         AcceptStep = r <=1;
 
         % step size controller (Asymptotic or second order PI)
         hn = max(facmin,min((epstol/r)^ki*(rp/r)^kp,facmax))*h;
         rp = r;
-        hvec(end+1) = h;
-        rvec(end+1) = r;
         funeval = funeval + 10;
     end
     % Store solution
+    
+    hvec(end+1) = h;
+    rvec(end+1) = r;
     t = t + h;
     y = yhat;
     Ts(end+1) = t;

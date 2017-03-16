@@ -43,8 +43,8 @@ for i = 1:n
     % Following stages
     for j = 2:s
         T(j) = t + hc(j);
-        Y(:,j) = y + F(:,j-1)*hAT(1:j-1,j);
-        F(:,j) = feval(fun,T(j),Y(:,j),varagin{:});
+        Y(:,j) = y + F(:,1:j-1)*hAT(1:j-1,j);
+        F(:,j) = feval(fun,T(j),Y(:,j),varargin{:});
     end
     
     % Update t and y and calulate the error with the embeded method

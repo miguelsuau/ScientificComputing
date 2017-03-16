@@ -6,8 +6,8 @@ n = 1;
 y0 = [2; 0];
 mu = 3;
 
-abstol = 1e-8;
-reltol = 1e-8;
+abstol = 1e-3;
+reltol = 1e-3;
 
 %% Explicit Euler Adaptive Step
 [T1,Y1,info1] = ExplicitEuler_AdaptiveStep(...
@@ -22,12 +22,12 @@ reltol = 1e-8;
 %% Trapezoidal Adaptive Step
 [T3,Y3,info3] = Trapezoidal_AdaptiveStep(...
           @VanderPolfunjac,tspan,n,y0,abstol,reltol,'PI',mu);
-%AdaptiveStepPlot(T3,Y3,info3)
+AdaptiveStepPlot(T3,Y3,info3)
 
 %% Classical Runge-Kutta 
 [T4,Y4,info4] = ClassicalRungeKutta_AdaptiveStep( ... 
           @VanderPolfunjac,tspan,n,y0,abstol,reltol,'PI',mu);
-%AdaptiveStepPlot(T4,Y4,info4)
+AdaptiveStepPlot(T4,Y4,info4)
 
 %% DOPRI54     
 butcher = ERKSolverErrorEstimationParameters('DOPRI54');

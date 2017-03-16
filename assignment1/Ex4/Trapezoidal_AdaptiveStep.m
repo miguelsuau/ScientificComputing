@@ -79,11 +79,11 @@ while T(end) < tspan(2)
         % step size controller (Asymptotic or second order PI)
         hn = max(facmin,min((epstol/r)^ki*(rp/r)^kp,facmax))*h;
         rp = r;
-        hvec(end+1) = h;
-        rvec(end+1) = r;
     
     end
     
+    hvec(end+1) = h;
+    rvec(end+1) = r;
     T(end+1) = T(end)+h;    
     Y(:,end+1) = Yhat;
     
