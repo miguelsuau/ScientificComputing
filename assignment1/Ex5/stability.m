@@ -14,8 +14,8 @@ d  = b-bhat;
 s = 3;
 
 %% Stability related calculations
-alpha = -4:0.01:4;
-beta = -4:0.01:4;
+alpha = -10:0.01:10;
+beta = -10:0.01:10;
 nreal = length(alpha);
 nimag = length(beta);
 I = eye(size(A));
