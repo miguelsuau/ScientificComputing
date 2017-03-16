@@ -97,7 +97,7 @@ Two different variations of DOPRI54 have also been implemented. DOPRI54 is just 
 
 \subsection{Global and local errors}
 
-It is easy to see in figure \ref{fig:sol1}, especially in the bottom graph, that, since we base the solution at one point on previous approximations, the further the points are from the initial value the more inaccurate they become and the greater the distance to the true solution is. This distance is called global error, whilst the error made in every iteration is known as local error. As we will discuss later the latter is commonly used to classify different methods depending in their accuracy.
+It is easy to see in figure \ref{fig:sol1}, especially in the bottom graph, that, since we base the solution at one point on previous approximations, the further the points are from the initial value the more inaccurate they become and the greater the distance to the true solution is. This distance is called global error, whilst the error made in every iteration is known as local error. As we will discuss later the latter is commonly used to classify different methods depending on their accuracy.
 
 \begin{figure}[H]
     \centering
@@ -120,9 +120,7 @@ x(t) = cos(t)
     \label{fig:global2}
 \end{figure}
 
-Figure \ref{fig:global1} represents the global error at time $t = 10$ made by the one step solvers (left graph) and the multistep solver (right graph) for different step sizes. As expected, the size the global error decreases when increasing the number of points used in the approximation.
-
-Why is not good to use global error??
+Figure \ref{fig:global1} represents the global error at time $t = 10$ made by the one step  and multistep methods for different step sizes. As expected, the size the global error decreases when increasing the number of points used in the approximation.
 
 \begin{figure}[H]
     \centering
@@ -131,7 +129,7 @@ Why is not good to use global error??
     \label{fig:LocalErrorTest1}
 \end{figure}
 
-On the other hand the local error at time $t = t_0 + h$ is shown in figure \ref{fig:LocalErrorTest1}. Again we see how the error decreases with the step size. Moreover, as the plots use logarithmic scale and the curves are approximately straight lines, we can conclude that there is an exponential dependence between local error and step size or in big O notation: $O(h^{p+1})$. The constant p is used to characterize different methods, thus we say that a method is order 2 when the local error is proportional to$h^{3}$. The dashed lines in figure \ref{fig:local1} can be used to verify the order of the solvers. That is, order 1 for Explicit and Implicit Euler, order 2 for the Trapezoidal method, order 4 for the classical Runge Kutta and one of the DOPRI54 versions and order 5 for the other DOPRI54.
+On the other hand the local error at time $t = t_0 + h$ is shown in figure \ref{fig:LocalErrorTest1}. Again we see how the error decreases with the step size. Moreover, as the plots use logarithmic scale and the curves are approximately straight lines, we can conclude that there is an exponential dependence between local error and step size or in big O notation: $O(h^{p+1})$. The constant p is used to characterize different methods, thus we say that a method is order 2 when the local error is proportional to$h^{3}$. The dashed lines in figure \ref{fig:LocalErrorTest1} can be used to verify the order of the solvers. That is, order 1 for Explicit and Implicit Euler, order 2 for the Trapezoidal method, order 4 for the classical Runge Kutta and one of the DOPRI54 versions and order 5 for the other DOPRI54.
 
 \begin{figure}[H]
     \centering
@@ -144,10 +142,9 @@ On the other hand the local error at time $t = t_0 + h$ is shown in figure \ref{
 
 Considering that the algorithms are used to solve differential equations that are hard to derive analyticaly, calculate the exact error is not always possible.
 
-An easy way to estimate the local error is called step doubling. The solution is computed for ...
-(performance). It turns out that estimate is proportional to the exact error and we can then 
+Even though the global error is usually more meaningful it is also more difficult to measure than the local error. An easy way to estimate the local error is called step doubling. The solution in every iteration is computed twice, for one full step of size $h$ and for two half steps of size $\frac{1}{2}h$, the error estimate is the difference between the two solutions which turns out to be is proportional to the exact error. Although the method gives a confident estimation it can be computationally demanding, especially when the order of accuracy needed is very high.
 
-More sophisticated algorithms, such as DOPRI54, use embbeded methods of lower order to estimate the error. Even though the estimations obtained as not as good as with step doubling, the secondary method is closely related to the main algorithm so that they can share computations and thus be very efficient. 
+More sophisticated algorithms, such as DOPRI54, use embbeded methods of lower order to estimate the error. Even though the estimations obtained are not as good as with step doubling, the secondary method is closely related to the main algorithm so that they can share computations and thus be very efficient. 
 
 
 \begin{figure}[H]
@@ -157,7 +154,7 @@ More sophisticated algorithms, such as DOPRI54, use embbeded methods of lower or
     \label{fig:Estimate1}
 \end{figure}
 
-The local error estimates are plotted along with the true errors in figure \ref{fig:Estimate1} for different step sizes. Even though, they do not match the exact values for some of the methods, the estimates lie always above the true errors which means that they can be used as an upper bound. Besides, as we know that the estimates are proportional to the exact local errors their slope can be used to verify the order of accuracy. In the embedded method estimation the slope is related to the order of lower order algorithm.
+The local error estimates are plotted along with the true errors in figure \ref{fig:Estimate1} for different step sizes. Even though, they do not match the exact values for some of the methods, the estimates lie always above the true errors which means that they can be used as an upper bound. Besides, as we know that the estimates are proportional to the exact local errors their slope can be used to verify the order of accuracy. In the embedded method estimation, such as DOPRI54, the slope is related to the order of lower order algorithm and thus, the order of accuracy will be always higher than the estimated value.
 
 \begin{figure}[H]
     \centering

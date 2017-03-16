@@ -45,7 +45,7 @@ hold on
 plot(T1,X1(:),'LineWidth',1.5)
 plot(T2,X2(:),'LineWidth',1.5)
 plot(T3,X3(:),'LineWidth',1.5)
-leg1 = legend('Analytical solution','Explicit Euler','Implicit Euler','Trapezoidal');
+leg1 = legend('True solution','Explicit Euler','Implicit Euler','Trapezoidal');
 set(leg1,'fontsize',8)
 subplot(2,1,2)
 plot(TH,XH(:),'--k','LineWidth',1.5)
@@ -53,7 +53,7 @@ hold on
 plot(T1H,X1H(:,1),'LineWidth',1.5)
 plot(T2H,X2H(:,1),'LineWidth',1.5)
 plot(T3H,X3H(:,1),'LineWidth',1.5)
-leg2 = legend('Analytical solution','Explicit Euler','Implicit Euler','Trapezoidal');
+leg2 = legend('True solution','Explicit Euler','Implicit Euler','Trapezoidal');
 set(leg2,'fontsize',8)
 print('solution1','-dpng')
 %% DOPRI54
