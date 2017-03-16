@@ -28,7 +28,6 @@ DROPI54        & 1749 & 178  & 85  & \\
 
 We see in table \ref{tab:tol10e3} that the number of function evaluations for the implicit methods is usually high. The reason is that this methods require a numerical solver, in this case Newton's method. It is also important to notice that, since DROPI54 uses an embedded method to estimate the error, the number of function evaluations is lower than for the rest of the methods, which compute those estimates by step doubling.
 
-We have also collected the results obtained for both asymptotic and PI controller with absolute and relative tolerances of $10^{-5}$ in tables \ref{tab:tol10e5} and \ref{tab:tol10e5PI}. The results show that there is not much difference between the two updating methods apart from the fact that PI takes a few more steps than the asymptotic controller.
 
 \begin{table}
 \centering
@@ -62,7 +61,8 @@ DROPI54        & 5734   & 383   & 510 & \\
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using a PI controller}
 \end{table}
 
-Finally, table \ref{tab:tol10e8} shows the values obtained for absolute and relative tolerances of $10^-8$. 
+We have also collected the results obtained for both asymptotic and PI controller with absolute and relative tolerances of $10^{-5}$ in tables \ref{tab:tol10e5} and \ref{tab:tol10e5PI}. The results show that there is not much difference between the two updating methods apart from the fact that PI takes a few more steps than the asymptotic controller. The top left graph reveals how for all the accepted points the residual coefficient is below 1 which corresponds to the tolerance especified, while all points above the treshold are rejected. 
+
 \begin{table}
 \centering
 \begin{tabular}{c|llll} \hline 
@@ -79,9 +79,13 @@ DROPI54        & 13772    & 1389  & 676 & \\
 \caption{Number of function evaluations number of steps accepted and number of steps rejected using a PI controller}
 \end{table} 
 
+Table \ref{tab:tol10e8} shows the values obtained for absolute and relative tolerances of $10^-8$ with a PI controller. In this case the number of steps required for all methods except DOPRI54 is extremely large. That is why for such small tolerances high order methods are useful in order to prevent long run time and increase the computing performance.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth,clip]{../Figures/AdaptiveStepDOPRI54}
-    \caption{Solution of the Van der Pol oscillator for DOPRI 54 with adaptive step size}
+    \caption{Solution of the Van der Pol oscillator for DOPRI 54 with adaptive step size.}
     \label{fig:AdaptiveStep}
 \end{figure}
+
+Finally figure \ref{fig:AdaptiveStep} shows the solution found with DOPRI54, along with the step sizes chosen at every point in time. As expected, the closer the points are to the drops shown in the top left graph the more steps are needed to obtain an accurate solution and the shorter those steps are.
