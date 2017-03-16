@@ -15,7 +15,7 @@ b1 = x(1); b2 = x(2); b3 = x(3); a21 = x(4); a31 = x(5); a32 = x(6);
 butcher.AT = [0 0 0; a21 0 0; a31 a32 0]';
 butcher.b  = [b1 b2 b3]';
 butcher.c  = [0 1/3 1]';
-butcher.d  = [b1 b2 b3]' - [1/8 1/2 3/8]'; % b - bhat
+butcher.d  = [1/8 1/2 3/8]' - [b1 b2 b3]'; % d  = bhat-b;
 butcher.bhat = [1/8 1/2 3/8]';
 butcher.stages = 3;
 
