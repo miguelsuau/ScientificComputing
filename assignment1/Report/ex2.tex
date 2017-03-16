@@ -2,7 +2,7 @@
 \section{The Van der Pol System}
 In this section we are going to test the implemented methods using the Van der Pol oscillator. This particular initial value problem is very useful to evaluate how numerical solvers respond to stiffness.
 
-Intuituively one can think of stiff problems as those whose solution varies rapidly in a short time span. This characteristic has an strong impact in some numerical methods that might need to take very small steps to get an accurate solution. Since their approximation is based in previous points, explicit methods are specially affected by this phenomena. For these methods, spontaneous variations have an strong effect on the truncation errors and make the numerical solution diverge from the real one. The concept of stiffness is strongly related to the stability of numerical algorithms which is discussed in sections 3 and 5.
+Intuitively one can think of stiff problems as those whose solution varies rapidly in a short time span. This characteristic has an strong impact in some numerical methods that might need to take very small steps to get an accurate solution. Since their approximation is based in previous points, explicit methods are specially affected by this phenomena. For these methods, spontaneous variations have an strong effect on the truncation errors and make the numerical solution diverge from the real one. The concept of stiffness is strongly related to the stability of numerical algorithms which is discussed in sections 3 and 5.
 
 Figure \ref{fig:VanderPolmu3} shows the solution obtained with the 5 different methods when $\mu = 3$. The graph on the left is the error estimation. In this case, all methods are able to converge to the true solution without having to take very small steps.
 
@@ -23,7 +23,7 @@ On the other hand, figure \ref{fig:VanderPolmu100} shows the solution for $\mu =
     \label{fig:VanderPolmu100}
 \end{figure}
 
-We have measured the local error at $t = t_0 + h$ for different step sizes and $\mu = 100$. Figure \ref{fig:VanderPolError} shows that the implicit methods, that is, Implicit Euler and trapezoidal are accurate even when taking large steps. On the other hand, the error of the high order explicit methods becomes extremely large for step sizes of $10^-1$. The fact that the trapezoidal method is an hybrid of the forward and the backward finit difference approximations explains why implicit Euler perfoms better for large steps. 
+We have measured the local error at $t = t_0 + h$ for different step sizes and $\mu = 100$. Figure \ref{fig:VanderPolError} shows that the implicit methods, that is, Implicit Euler and trapezoidal are accurate even when taking large steps. On the other hand, the error of the high order explicit methods becomes extremely large for step sizes of $10^-1$. The fact that the trapezoidal method is an hybrid of the forward and the backward finite difference approximations explains why implicit Euler performs better for large steps. 
 
 \begin{figure}[H]
     \centering

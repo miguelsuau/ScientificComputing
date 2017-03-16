@@ -31,7 +31,7 @@ y(t_0) = y_0
 \label{eq:ExplicitEuler}
 \end{equation}
 
-If the independent variable is discretized, the solution can be obtained in $n$ steps, by performing cosequtive approximations to the real function values.
+If the independent variable is discretized, the solution can be obtained in $n$ steps, by performing consecutive approximations to the real function values.
 
 \begin{equation}
 y_{n+1} = y_{n} + h f(t_n,y_n)
@@ -47,9 +47,9 @@ y_{n+1} = y_{n} + h f(t_{n+1},y_{n+1})
 \label{eq:ExplicitEuler}
 \end{equation}
 
-However, for nonlinear problems the solution of the previous equation may require the use of numerical solvers, such as Newton's method, and thus the algorithm becomes computationally more demanding than the explicit Euler's method. We shall see in the next section the advantange of using this method.
+However, for nonlinear problems the solution of the previous equation may require the use of numerical solvers, such as Newton's method, and thus the algorithm becomes computationally more demanding than the explicit Euler's method. We shall see in the next section the advantage of using this method.
 
-Finally, the trapezodial method can be seen as a combination of both methods, where the solution is computed in every iteration by taking the average of the forward and backward finite difference approximations.
+Finally, the trapezoidal method can be seen as a combination of both methods, where the solution is computed in every iteration by taking the average of the forward and backward finite difference approximations.
 
 \begin{equation}
 y_{n+1} = y_{n} + \frac{1}{2} h (f(t_{n+1},y_{n+1})
@@ -68,13 +68,13 @@ Figure \ref{fig:sol1} shows the solution from $t = 0$ to $t = 10$ of the two ini
     \label{fig:sol1}
 \end{figure}
 
-All three implimentations of these one step algorithms along with the code for Newton's method can be found in the appendix.
+All three implementations of these one step algorithms along with the code for Newton's method can be found in the appendix.
 
-\subsection{Multistep methods}
+\subsection{Multi step methods}
 
 Even though we see in figure \ref{fig:sol1} that the solution found by the trapezoidal method lies very close to the analytical solution, for some applications one could require higher order approximations to obtain more accurate results.
 
-The classical Runge-Kutta method and its higher order variations play with the concept introduced in last section to create finer approximations to the solution. Concretetly the classical Runge-Kutta method takes four stages to compute a weighted avarage of four different slope estimates. The slope estimation at the fourth stage will be based in the information obtained in the three previous stages.
+The classical Runge-Kutta method and its higher order variations play with the concept introduced in last section to create finer approximations to the solution. Concretely the classical Runge-Kutta method takes four stages to compute a weighted average of four different slope estimates. The slope estimation at the fourth stage will be based in the information obtained in the three previous stages.
 
 \begin{equation}\label{eq:ClassicRungeKutta}
 \begin{aligned}
@@ -91,9 +91,9 @@ x_{n+1} &= x_n + h (\frac{1}{6} f(T_1,X_1) + \frac{1}{2}  f(T_2,X_2) + \frac{1}{
 \end{aligned}
 \end{equation}
 
-Equation \ref{eq:ClassicRungeKutta} reveals that since this is an explicit method there is no need for a numerical solver. The coefficients and weights of these equations are often collected in the Butcher's Tableu. This is described more deeply in section 3.
+Equation \ref{eq:ClassicRungeKutta} reveals that since this is an explicit method there is no need for a numerical solver. The coefficients and weights of these equations are often collected in the Butcher's Tableau. This is described more deeply in section 3.
 
-Two different variations of DOPRI54 have also been implemented. DOPRI54 is just another explicit Runge-Kutta method of higher order with more stages and a larger Butcher's Tableu. We shall see when comparing the error estimates the difference between the two methods. The three methods are shown in the appendix.
+Two different variations of DOPRI54 have also been implemented. DOPRI54 is just another explicit Runge-Kutta method of higher order with more stages and a larger Butcher's Tableau. We shall see when comparing the error estimates the difference between the two methods. The three methods are shown in the appendix.
 
 \subsection{Global and local errors}
 
@@ -120,7 +120,7 @@ x(t) = cos(t)
     \label{fig:global2}
 \end{figure}
 
-Figure \ref{fig:global1} represents the global error at time $t = 10$ made by the one step  and multistep methods for different step sizes. As expected, the size the global error decreases when increasing the number of points used in the approximation.
+Figure \ref{fig:global1} represents the global error at time $t = 10$ made by the one step  and multi step methods for different step sizes. As expected, the size the global error decreases when increasing the number of points used in the approximation.
 
 \begin{figure}[H]
     \centering
@@ -140,11 +140,11 @@ On the other hand the local error at time $t = t_0 + h$ is shown in figure \ref{
 
 \subsection{Error estimation}
 
-Considering that the algorithms are used to solve differential equations that are hard to derive analyticaly, calculate the exact error is not always possible.
+Considering that the algorithms are used to solve differential equations that are hard to derive analytically, calculate the exact error is not always possible.
 
 Even though the global error is usually more meaningful it is also more difficult to measure than the local error. An easy way to estimate the local error is called step doubling. The solution in every iteration is computed twice, for one full step of size $h$ and for two half steps of size $\frac{1}{2}h$, the error estimate is the difference between the two solutions which turns out to be is proportional to the exact error. Although the method gives a confident estimation it can be computationally demanding, especially when the order of accuracy needed is very high.
 
-More sophisticated algorithms, such as DOPRI54, use embbeded methods of lower order to estimate the error. Even though the estimations obtained are not as good as with step doubling, the secondary method is closely related to the main algorithm so that they can share computations and thus be very efficient. 
+More sophisticated algorithms, such as DOPRI54, use embedded methods of lower order to estimate the error. Even though the estimations obtained are not as good as with step doubling, the secondary method is closely related to the main algorithm so that they can share computations and thus be very efficient. 
 
 
 \begin{figure}[H]
