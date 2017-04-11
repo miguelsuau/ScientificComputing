@@ -91,7 +91,7 @@ while Ts(end) < tspan(2)
         tm = t + hm;
         
         % First stage
-        T(1) = tm + hm;
+        T(1) = tm;
         Y(:,1) = ym;
         F(:,1) = feval(fun,T(1),Y(:,1),varargin{:});
         funeval = funeval + 1;

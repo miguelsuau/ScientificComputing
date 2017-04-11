@@ -25,8 +25,9 @@ reltol = 1e-3;
 AdaptiveStepPlot(T3,Y3,info3)
 
 %% Classical Runge-Kutta 
-[T4,Y4,info4] = ClassicalRungeKutta_AdaptiveStep( ... 
-          @VanderPolfunjac,tspan,n,y0,abstol,reltol,'PI',mu);
+
+[T4,Y4,info4] = ClassicalRungeKutta_AdaptiveStep2( ... 
+          @VanderPolfunjac,tspan,n,y0,abstol,reltol,'PI',butcher,mu);
 AdaptiveStepPlot(T4,Y4,info4)
 
 %% DOPRI54     
