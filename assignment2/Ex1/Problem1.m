@@ -57,11 +57,17 @@ while ((k < maxit) && (abs(rc) > tol))
 end
 plot(tc,Uc(:,1))
 
-% Sensitivity analysis finite difference approximation
+%% Sensitivity analysis finite difference approximation
+% Forward
 epsilon = 1e-7;
 U0e = [-1; c+epsilon];
 [te,Ue] = ode45(odefun,ts,U0e);
 duds = (Ue(end,1) - Uc(end,1))/epsilon;
+% Backward
+epsilon = 1e-7;
+U0e = [-1; c-epsilon];
+[te,Ue] = ode45(odefun,ts,U0e);
+duds2 = (Uc(end,1) - Ue(end,1))/epsilon;
 
 % Sensitivity analysis analytical solution
 odefun2 = @(t,w) [w(2); -w(1)*(w(2)-1)/0.01; w(4); (-w(2)+1)/0.01*w(3)-w(1)/0.01*w(4)];
@@ -69,12 +75,22 @@ w0 = [-1; c; 0; 1];
 [t,W] = ode45(odefun2,ts,w0);
 
 
+%% Plot solution as a function of sigma
+sigma = linspace(0.9999,1.01,1000);
+Uend = zeros(1000,1);
+for i=1:1000   
+    U0 = [-1; sigma(i)];    
+    [t,U] = ode45(odefun,ts,U0);
+    Uend(i) = U(end,1);
+end
+
 %% Newton's method
-sigma = 5;
+sigma = 8;
 k = 0;
 tol = 1e-2;
 r = tol+1;
-odefun2 = @(t,w) [w(2); -w(1)*(w(2)-1)/0.01; w(4); (-w(2)+1)/0.01*w(3)-w(1)/0.01*w(4)];
+odefun2 = @(t,w) [w(2); -w(1)*(w(2)-1)/0.8; w(4); (-w(2)+1)/0.8*w(3)-w(1)/0.8*w(4)];
+tic;
 while ((k < maxit) && (abs(r) > tol))
     w0 = [-1; sigma; 0; 1];
     [t,W] = ode45(odefun2,ts,w0);
@@ -82,13 +98,15 @@ while ((k < maxit) && (abs(r) > tol))
     sigma = sigma - r/W(end,3);
     k = k+1;
 end
-
+toc
 
 %% Finite difference approximation/Secant Method
-sigma = 1;
+sigma = 10;
 k = 0;
 r = tol+1;
 epsilon = 1e-4;
+
+tic;
 while ((k < maxit) && (abs(r) > tol))
     U0 = [-1; sigma];
     [t1,U1] = ode45(odefun,ts,U0);
@@ -99,3 +117,4 @@ while ((k < maxit) && (abs(r) > tol))
     sigma = sigma - r/duds;
     k = k+1;
 end
+toc
