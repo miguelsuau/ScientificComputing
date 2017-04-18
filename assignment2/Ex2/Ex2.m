@@ -33,9 +33,6 @@ surf(X,Y,Utrue);
 figure(2);
 surf(X, Y, U);
 
-figure(3)
-semilogy(max( abs( Utrue-U ) ))
-
 %% Test case 0
 u0 = @(x,y) sin(4*pi*(x+y))+cos(4*pi*x.*y);
 U0 = u0(X,Y);
@@ -99,9 +96,6 @@ surf(Xint,Yint,U1);
 figure(2)
 surf(Xint,Yint,U1calc);
 
-figure(3)
-semilogy(max( abs( U1-U1calc ) ))
-
 %% Test case 2 (unfinished)
 u2 = @(x,y) sin(2*pi*abs(x - y).^(2.5));
 U2 = u2(X,Y);
@@ -117,6 +111,3 @@ surf(X,Y,U2);
 
 figure(2)
 surf(X,Y,U2calc);
-
-figure(3)
-semilogy(max( abs( U2(Iint,Jint)-U2calc(Iint,Jint) ) ))
