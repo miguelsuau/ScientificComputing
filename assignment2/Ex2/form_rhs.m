@@ -10,10 +10,11 @@ Jint = 2:m+1;
 Xint = X(Iint,Jint);
 Yint = Y(Iint,Jint);
 
-F = f(Xint,Yint);
+F = zeros(m,m);
+%F = f(Xint,Yint);
 % contribution from 3.19 in LeVeque
-contrib = reshape( ((1/12)*h^2)*poisson5(m)*reshape(F,m*m,1), m, m);
-F = F + contrib;
+%contrib = reshape( ((1/12)*h^2)*poisson5(m)*reshape(F,m*m,1), m, m);
+%F = F + contrib;
 U = u(X,Y);
 % Uncomment to test with symbolic variables to see if Matlab code matches the calculations on paper
 % U = sym('U%d%d', [m+2 m+2]);
@@ -39,6 +40,9 @@ F(m,m) = F(m,m) + hmult * 1 * U(m+2,m+2);
 F(m,1) = F(m,1) + hmult * 1 * U(m+2,1);
 F(1,m) = F(1,m) + hmult * 1 * U(1,m+2);
 % finalize
+FF = f(Xint,Yint);
+FC = reshape( ((1/12)*h^2)*poisson5(m)*reshape(FF,m*m,1), m, m);
+F = FF + FC + F;
 F = reshape(F, m*m, 1);
 
 end

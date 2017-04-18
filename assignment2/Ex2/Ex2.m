@@ -3,7 +3,7 @@ close all;
 
 a = 0; 
 b = 1; 
-m = 20;
+m = 30;
 h = (b-a)/(m+1);
 x = linspace(a,b,m+2);   % grid points x including boundaries
 y = linspace(a,b,m+2);   % grid points y including boundaries
@@ -19,51 +19,79 @@ Yint = Y(Iint,Jint);
 fdummy = @(x,y) 0*x.*y;
 
 %% Dummy test
-utt = @(x,y) 0*x.*y + 1;
-Utt = utt(X,Y);
-Uttc = Utt;
-Uttc(Iint, Jint) = reshape( poisson9(m)\form_rhs(m, @(x,y) 0*x.*y, utt), m, m );
-figure
-surf(X,Y,Utt);
-figure
-surf(X,Y,Uttc);
-figure
-semilogy(max( abs( Utt-Uttc ) ))
+utrue = @(x,y) exp(x+y/2);
+f = @(x,y) 1.25 * exp(x+y/2);
+Utrue = utrue(X,Y);
+
+RHS = form_rhs(m,f,utrue);
+A = poisson9(m);
+U = Utrue;
+U(Iint,Jint) = reshape(A\RHS(:), m, m);
+
+figure(1);
+surf(X,Y,Utrue);
+
+figure(2);
+surf(X, Y, U);
+
+figure(3)
+semilogy(max( abs( Utrue-U ) ))
 
 %% Test case 0
 u0 = @(x,y) sin(4*pi*(x+y))+cos(4*pi*x.*y);
 U0 = u0(X,Y);
+% given by matlab simplify(laplacian() or diff(...,2)+diff(...,2))
+f0 = @(X,Y) -16 * (pi ^ 2) * (...
+    cos((4 * pi * X .* Y)) .* (X .^ 2)...
+    + cos((4 * pi * X .* Y)) .* (Y .^ 2)...
+    + 2 * sin((4 * pi * (X + Y)))...
+);
+
+RHS0 = form_rhs(m, f0, u0);
+A = poisson9(m);
+U0calc = U0;
+U0calc(Iint,Jint) = reshape( A\RHS0(:), m, m );
 
 figure(1)
 surf(X,Y,U0);
 
 figure(2)
-U0calc = U0;
-U0calc(Iint,Jint) = reshape( poisson9(m)\form_rhs(m, @(x,y) 0*x.*y, u0), m, m );
 surf(X,Y,U0calc);
-%TODO global error
+
 figure(3)
-semilogy(max( abs( U0-U0calc ) ))
+semilogy(max( abs( U0(Iint,Jint)-U0calc(Iint,Jint) ) ))
 
 %% Test case 1 (unfinished)
 u1 = @(x,y) x.^2 + y.^2;
 U1 = u1(Xint,Yint);
 
+RHS1 = form_rhs(m, @(x,y) 4*x.^0.*y.^0, u1); % f(x,y) = 4
+U1calc = reshape( poisson9(m)\RHS1(:), m, m );
+
 figure(1)
 surf(Xint,Yint,U1);
 
 figure(2)
-U1calc = reshape( poisson9(m)\form_rhs(m, @(x,y) x.^2+y.^2, u1), m, m );
 surf(Xint,Yint,U1calc);
+
+figure(3)
+semilogy(max( abs( U1-U1calc ) ))
 
 %% Test case 2 (unfinished)
 u2 = @(x,y) sin(2*pi*abs(x - y).^(2.5));
 U2 = u2(X,Y);
+f2 = @(x1,y1) 5*pi*abs(x1 - y1).^(1/2).*sign(x1 - y1).^2.*(...
+    3*cos(2*pi*abs(x1 - y1).^(5/2))...
+    - 10*pi*abs(x1 - y1).^(5/2).*sin(2*pi*abs(x1 - y1).^(5/2))...
+);
+U2calc = U2;
+U2calc(Iint,Jint) = reshape( poisson9(m)\form_rhs(m, f2, u2), m, m );
 
 figure(1)
 surf(X,Y,U2);
 
 figure(2)
-U2calc = U2;
-U2calc(Iint,Jint) = reshape( poisson9(m)\form_rhs(m, u2, u2), m, m );
 surf(X,Y,U2calc);
+
+figure(3)
+semilogy(max( abs( U2(Iint,Jint)-U2calc(Iint,Jint) ) ))
