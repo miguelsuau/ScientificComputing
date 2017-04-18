@@ -1,6 +1,5 @@
-%% Setup
 close all;
-
+%% Setup
 a = 0; 
 b = 1; 
 m = 30;
@@ -58,8 +57,34 @@ surf(X,Y,U0);
 figure(2)
 surf(X,Y,U0calc);
 
+%% Test case 0 - global error
+
+Gerr = [];
+Grange = [30 100 500 1000];
+for k=Grange
+    m = k;
+    h = 1/(m+1);
+    x = linspace(0,1,m+2);
+    y = linspace(0,1,m+2);
+    [X,Y] = meshgrid(x,y);
+    Iint = 2:m+1; 
+    Jint = 2:m+1;
+    Xint = X(Iint,Jint);
+    Yint = Y(Iint,Jint);
+    
+    U0 = u0(X,Y);
+    RHS0 = form_rhs(m, f0, u0);
+    A = poisson9(m);
+    U0calc = U0;
+    U0calc(Iint,Jint) = reshape( A\RHS0(:), m, m );
+    
+    Gerr = [Gerr(:); max(max( abs( U0(Iint,Jint)-U0calc(Iint,Jint) ) ))];
+    fprintf('Finished calculating for m=%d\n', m)
+end
 figure(3)
-semilogy(max( abs( U0(Iint,Jint)-U0calc(Iint,Jint) ) ))
+hs = 1./(10*(Grange+ones(size(Grange)))); % h = 1/(m+1)
+loglog(hs, Gerr, hs, hs.^(4+1))
+fprintf('Test case 0 done!\n')
 
 %% Test case 1 (unfinished)
 u1 = @(x,y) x.^2 + y.^2;
