@@ -62,19 +62,13 @@ Solution is simply found by using the direct method of solving a system $A u = f
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.3\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../Figures/ex2u0exact}
-  \captionof{figure}{$u_{0,exact}$ on $32 \times 32$ grid}
-  \label{fig:ex2:u0exact}
-\end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u0calc}
-  \captionof{figure}{Calculated $u$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs}}
+  \captionof{figure}{Calculated $u_0$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs} with BC on $32 \times 32$ grid}
   \label{fig:ex2:u0calc}
 \end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u0err}
   \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
@@ -93,19 +87,13 @@ In this case the function $f_0$ is harmonical and according to LeVeque, using a 
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.3\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../Figures/ex2u1exact}
-  \captionof{figure}{$u_{1,exact}$ on $32 \times 32$ grid}
-  \label{fig:ex2:u1exact}
-\end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u1calc}
-  \captionof{figure}{Calculated $u$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs}}
+  \captionof{figure}{Calculated $u_1$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs} with BC on $32 \times 32$ grid}
   \label{fig:ex2:u1calc}
 \end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u1err}
   \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
@@ -126,19 +114,13 @@ The global error is really low for smaller grid size and increases as the grid g
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.3\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{../Figures/ex2u2exact}
-  \captionof{figure}{$u_{2,exact}$ on $32 \times 32$ grid}
-  \label{fig:ex2:u2exact}
-\end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u2calc}
-  \captionof{figure}{Calculated $u$ using \texttt{poisson9 \textbackslash form\_rhs}}
+  \captionof{figure}{Calculated $u_2$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs} with BC on $32 \times 32$ grid}
   \label{fig:ex2:u2calc}
 \end{minipage}\hfill%
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.45\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u2err}
   \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
