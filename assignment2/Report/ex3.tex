@@ -1,0 +1,46 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+    
+\section{Iterative solvers in 2D}
+
+This section goes through necessary parts needed to build a V-cycle solver on a 2D grid with the same assumptions as in section 2. Without further ado, let's take a look at a pseudoalgorithm first and then explain what individual functions do in detail.
+\begin{algorithm}[h]
+    \underline{U = function Vcycle($U, \omega, n_{smooth}, m, F$)}\\
+    \eIf{$m = 1$}
+    {
+        directly solve at the coarsest level
+    }
+    {
+        pre-smoothing: \texttt{smooth}\\
+        compute the residual: $r = F - A u$\\
+        coarsen residuals: \texttt{coarsen}\\
+        recursive part to obtain error: \texttt{Vcycle($\mathbf{0}, \omega, n_{smooth}, -R_{coarse}$)}\\
+        interpolate the error: \texttt{interpolate}\\
+        update the solution: $U = U + E$\\
+        post-smoothing: \texttt{smooth}\\
+    }
+    \caption{V-cycle algorithm pseudocode, full reference can be found on slide 8 of Lecture 20}
+\end{algorithm}
+The name V-cycle comes from the recursive part of the algorithm -- the 2 lines indicate the path of pre- and post-smoothing on coarse/interpolated grids, whereas the point of the intersection indicates directly finding the solution in the first \texttt{if} branch.
+
+It is worth noting that due to coarsened grid the depth of the recursion will be $\log_2(m)$ per one cycle. The cycle will be repeated until a desired tolerance is reach or the maximum number of iterations has passed.
+
+As requested in the handout, matrix-free method \texttt{Amult} will be used to calculate the term $\mathbf{-A u}$ without storing the $\mathbf{A}$ matrix in memory (as it is of size $m^2 \times m^2$ and somewhat sparse).
+
+\subsection*{Relaxation and smoothing}
+The main motivation to use iteratiors or relaxations is that the high frequency components of the error will decay after couple of iterations (in the code and in LeVeque 3 iterations are chosen). However there are still lower frequency components and the covergence starts to slow down.
+
+\subsection*{Coarsing / interpolating}
+One approach to solve this is issue is taking a fine grid to a coarse one and back (V). As is mentioned in the book, the convergence rate for some components of the error is greatly improved by transferring the error to a coarser grid. An example is given that a component's frequencies can be shifted to the right, i.e. more in the middle of what range the coarse grid has to offer, resulting in the improvement of the damping factor (in some cases as high as one order of the magnitude).
+
+\subsection*{Recursion}
+Now the problem is refolmulated in order to transfer the remaining part to the coarser grid. The approach taken uses the recursive call to find the error vector by solving $\mathbf{A e} = \mathbf{-r}$ via the \texttt{vcycle} method.
+
+Since the result is obtained on a coarse grid, interpolating is used in order to project the error vector back to the original $m \times m$ grid. In order to find a better approximation of $U$ the error vector is added and post-smoothing is performed. Once all the recursive results are popped from the stack a solution to the given problem is returned. As mentioned before this process is repeated until a desired tolerance or maximum number of iterations is reached. 
+
+\subsection*{Matlab code}
+All the Matlab code for this section is provided in the appendix. 
+
+    
+\end{document}

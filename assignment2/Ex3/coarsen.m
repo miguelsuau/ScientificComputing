@@ -9,6 +9,7 @@ function [ Rc ] = coarsen( R, m )
 % idx = 2:2:length(R);
 % Rc = 1/4*(R(idx+1,idx-1) + R(idx+1,idx+1) + R(idx-1, idx-1) + R(idx-1, idx+1));
 
+R = reshape(R,m,m);
 ind = 2:2:length(R);
  
 Rc = ( 4*R(ind,ind) + ...

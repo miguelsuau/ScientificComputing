@@ -1,6 +1,7 @@
 function [ R ] = interpolate( Rc, m )
 
 mc = (m-1)/2;
+Rc = reshape(Rc,mc,mc);
 R = zeros(m);
 
 for k=1:mc
