@@ -10,10 +10,7 @@ Jint = 2:m+1;
 Xint = X(Iint,Jint);
 Yint = Y(Iint,Jint);
 
-F = f(Xint,Yint);
-% contribution from 3.19 in LeVeque
-contrib = reshape( (((1/12)*h^2)*poisson5(m))*reshape(F,m*m,1) , m, m);
-F = F + contrib;
+F = zeros(m);
 % boundaries
 U = u(X,Y);
 U(2:m+1,2:m+1) = 0;
@@ -48,9 +45,9 @@ F(m,m) = F(m,m) + hmult * 1 * U(m+2,m+2);
 F(m,1) = F(m,1) + hmult * 1 * U(m+2,1);
 F(1,m) = F(1,m) + hmult * 1 * U(1,m+2);
 % finalize
-% FF = f(Xint,Yint);
-% FC = ((1/12)*h^2)*poisson5(m)*reshape(FF,m*m,1);
-% F = FF(:) + FC + F(:);
+FC = reshape( poisson5(m+2)*reshape(f(X,Y),(m+2)^2,1) , m+2, m+2);
+F = f(Xint,Yint) + F + ((1/12)*h^2)*FC(Iint,Jint);
+
 F = reshape(F, m*m, 1);
 
 end
