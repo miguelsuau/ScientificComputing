@@ -45,19 +45,19 @@ f0 = @(X,Y) -16 * (pi ^ 2) * (...
 
 RHS0 = form_rhs(m, f0, u0);
 A = poisson9(m);
-U0calc = U0;
-U0calc(Iint,Jint) = reshape( A\RHS0(:), m, m );
+%U0calc = U0;
+U0calc = reshape( A\RHS0(:), m, m );
 
 figure(1)
-surf(X,Y,U0);
+surf(Xint,Yint,U0(Iint,Jint));
 
 figure(2)
-surf(X,Y,U0calc);
+surf(Xint,Yint,U0calc);
 
 %% Test case 0 - global error
 
 Gerr = [];
-Grange = [30 100 500 1000];
+Grange = [15 100 500 1000 30];
 for k=Grange
     m = k;
     h = 1/(m+1);
@@ -72,22 +72,23 @@ for k=Grange
     U0 = u0(X,Y);
     RHS0 = form_rhs(m, f0, u0);
     A = poisson9(m);
-    U0calc = U0;
-    U0calc(Iint,Jint) = reshape( A\RHS0(:), m, m );
+    U0calc = reshape( A\RHS0(:), m, m );
     
-    Gerr = [Gerr(:); max(max( abs( U0(Iint,Jint)-U0calc(Iint,Jint) ) ))];
+    Gerr = [Gerr(:); max(max( abs( U0(Iint,Jint)-U0calc ) ))];
     fprintf('Finished calculating for m=%d\n', m)
 end
 figure(3)
-hs = 1./(10*(Grange+ones(size(Grange)))); % h = 1/(m+1)
-loglog(hs, Gerr, hs, hs.^(4+1))
+hs = 1./((Grange+ones(size(Grange)))); % h = 1/(m+1)
+loglog(hs, Gerr, hs, hs.^(4), hs, hs.^(2), 'LineWidth', 2.4)
+legend({'Global error', '$\mathcal{O}(h^4)$', '$\mathcal{O}(h^2)$'}, 'Location', 'SouthEast', 'FontSize', 24, 'Interpreter', 'latex')
 fprintf('Test case 0 done!\n')
 
-%% Test case 1 (unfinished)
+%% Test case 1 (run before global errors for faster comp)
 u1 = @(x,y) x.^2 + y.^2;
 U1 = u1(Xint,Yint);
+f1 = @(x,y) 4*x.^0.*y.^0;
 
-RHS1 = form_rhs(m, @(x,y) 4*x.^0.*y.^0, u1); % f(x,y) = 4
+RHS1 = form_rhs(m, f1, u1); % f(x,y) = 4
 U1calc = reshape( poisson9(m)\RHS1(:), m, m );
 
 figure(1)
@@ -96,7 +97,36 @@ surf(Xint,Yint,U1);
 figure(2)
 surf(Xint,Yint,U1calc);
 
-%% Test case 2 (unfinished)
+%% Test case 1 - global error
+
+Gerr = [];
+Grange = [15 30 100 500 1000];
+for k=Grange
+    m = k;
+    h = 1/(m+1);
+    x = linspace(0,1,m+2);
+    y = linspace(0,1,m+2);
+    [X,Y] = meshgrid(x,y);
+    Iint = 2:m+1; 
+    Jint = 2:m+1;
+    Xint = X(Iint,Jint);
+    Yint = Y(Iint,Jint);
+    
+    U = u1(X,Y);
+    RHS = form_rhs(m, f1, u1);
+    A = poisson9(m);
+    Ucalc = reshape( A\RHS(:), m, m );
+    
+    Gerr = [Gerr(:); max(max( abs( U(Iint,Jint)-Ucalc ) ))];
+    fprintf('Finished calculating for m=%d\n', m)
+end
+figure(3)
+hs = 1./((Grange+ones(size(Grange)))); % h = 1/(m+1)
+loglog(hs, Gerr, hs, hs.^(4), hs, hs.^(2), 'LineWidth', 2.4)
+legend({'Global error', '$\mathcal{O}(h^4)$', '$\mathcal{O}(h^2)$'}, 'Location', 'SouthEast', 'FontSize', 24, 'Interpreter', 'latex')
+fprintf('Test case 1 done!\n')
+
+%% Test case 2 (run before global errors for faster comp)
 u2 = @(x,y) sin(2*pi*abs(x - y).^(2.5));
 U2 = u2(X,Y);
 f2 = @(x1,y1) 5*pi*abs(x1 - y1).^(1/2).*sign(x1 - y1).^2.*(...
@@ -111,3 +141,32 @@ surf(X,Y,U2);
 
 figure(2)
 surf(X,Y,U2calc);
+
+%% Test case 2 - global error
+
+Gerr = [];
+Grange = [15 30 100 500 1000];
+for k=Grange
+    m = k;
+    h = 1/(m+1);
+    x = linspace(0,1,m+2);
+    y = linspace(0,1,m+2);
+    [X,Y] = meshgrid(x,y);
+    Iint = 2:m+1; 
+    Jint = 2:m+1;
+    Xint = X(Iint,Jint);
+    Yint = Y(Iint,Jint);
+    
+    U = u2(X,Y);
+    RHS = form_rhs(m, f2, u2);
+    A = poisson9(m);
+    Ucalc = reshape( A\RHS(:), m, m );
+    
+    Gerr = [Gerr(:); max(max( abs( U(Iint,Jint)-Ucalc ) ))];
+    fprintf('Finished calculating for m=%d\n', m)
+end
+figure(3)
+hs = 1./((Grange+ones(size(Grange)))); % h = 1/(m+1)
+loglog(hs, Gerr, hs, hs.^(4), hs, hs.^(2), 'LineWidth', 2.4)
+legend({'Global error', '$\mathcal{O}(h^4)$', '$\mathcal{O}(h^{2})$'}, 'Location', 'SouthEast', 'FontSize', 24, 'Interpreter', 'latex')
+fprintf('Test case 2 done!\n')

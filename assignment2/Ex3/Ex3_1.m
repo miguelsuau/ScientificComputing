@@ -11,10 +11,11 @@ f0 = @(X,Y) -16 * (pi ^ 2) * (...
     + 2 * sin((4 * pi * (X + Y)))...
 );
 b = -f0(Xint,Yint);
-Afun = @(u) reshape(-Amult(u,m), (m)^2, 1);
+Afun = @(u) Amult(u,m); % already returned as -Au
 
 u = pcg(Afun,b(:));
-% max(max(abs(Amult(u,m+2) - reshape(poisson5(m+2)*u,m+2,m+2))))
+% Check error
+max(max(abs(Amult(u,m) - -1*poisson5(m)*u)))
 
 figure(1)
 surf(Xint,Yint,reshape(u,m,m));

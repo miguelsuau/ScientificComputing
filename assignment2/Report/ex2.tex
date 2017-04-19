@@ -62,19 +62,27 @@ Solution is simply found by using the direct method of solving a system $A u = f
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u0exact}
   \captionof{figure}{$u_{0,exact}$ on $32 \times 32$ grid}
   \label{fig:ex2:u0exact}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u0calc}
   \captionof{figure}{Calculated $u$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs}}
   \label{fig:ex2:u0calc}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../Figures/ex2u0err}
+  \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
+  \label{fig:ex2:u0err}
 \end{minipage}
 \end{figure}
+
+In this case the function $f_0$ is harmonical and according to LeVeque, using a 9-point Laplacian with correction we are able to achieve fourth order convergence.
 
 % u1
 \subsubsection*{Second case}
@@ -85,27 +93,31 @@ Solution is simply found by using the direct method of solving a system $A u = f
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u1exact}
   \captionof{figure}{$u_{1,exact}$ on $32 \times 32$ grid}
   \label{fig:ex2:u1exact}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u1calc}
   \captionof{figure}{Calculated $u$ using \texttt{poisson9} \textbackslash \texttt{form\_rhs}}
   \label{fig:ex2:u1calc}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../Figures/ex2u1err}
+  \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
+  \label{fig:ex2:u1err}
 \end{minipage}
 \end{figure}
 
+Function $f_1$ is not harmonic, nor zero, but a constant and as mentioned in the theory, the dominant error term in the error does not disappear so fourth order convergence cannot be achieved as hinted in the handout.
+
+The global error is really low for smaller grid size and increases as the grid grows, which is rather strange.
+
 % u2
-%u2 = @(x,y) sin(2*pi*abs(x - y).^(2.5));
-%U2 = u2(X,Y);
-%f2 = @(x1,y1) 5*pi*abs(x1 - y1).^(1/2).*sign(x1 - y1).^2.*(...
-%    3*cos(2*pi*abs(x1 - y1).^(5/2))...
-%    - 10*pi*abs(x1 - y1).^(5/2).*sin(2*pi*abs(x1 - y1).^(5/2))...
-%);
 \subsubsection*{Third case}
 \begin{align}
     u_{2}(x,y) &= \sin(2 \pi |x-y|^{2.5}) \\
@@ -114,19 +126,27 @@ Solution is simply found by using the direct method of solving a system $A u = f
 
 \begin{figure}[h]
 \centering
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u2exact}
   \captionof{figure}{$u_{2,exact}$ on $32 \times 32$ grid}
   \label{fig:ex2:u2exact}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{../Figures/ex2u2calc}
   \captionof{figure}{Calculated $u$ using \texttt{poisson9 \textbackslash form\_rhs}}
   \label{fig:ex2:u2calc}
+\end{minipage}\hfill%
+\begin{minipage}{.3\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{../Figures/ex2u2err}
+  \captionof{figure}{Global error (blue), $\mathcal{O}(h^4)$ (orange), $\mathcal{O}(h^2)$ (yellow)}
+  \label{fig:ex2:u2err}
 \end{minipage}
 \end{figure}
+
+As mentioned in the previous case, $f_2$ is suspected to be non-harmonic with the sign term and absolute values, so the aforementioned statement also applies here. As can be seen from the plot, the convergence rate is close to $\mathcal{O}(h^2)$.
 
 
 
