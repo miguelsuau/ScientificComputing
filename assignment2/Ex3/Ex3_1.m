@@ -13,7 +13,7 @@ f0 = @(X,Y) -16 * (pi ^ 2) * (...
 b = -f0(Xint,Yint);
 Afun = @(u) Amult(u,m); % already returned as -Au
 
-u = pcg(Afun,b(:));
+u = pcg(Afun,b(:),h^2,100);
 % Check error
 max(max(abs(Amult(u,m) - -1*poisson5(m)*u)))
 
