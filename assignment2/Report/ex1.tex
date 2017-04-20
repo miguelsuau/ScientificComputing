@@ -12,6 +12,8 @@ u(0) = \alpha \qquad u'(1) = \beta
 \label{eq:problem1}
 \end{equation}
 
+Note that for convenience the report has been structured differently than in the assignment specifications and the answer to some of the questions may be located in other sections.
+
 \subsection{Newton's method}
 
 If the independent variable $t$ is discretized and the second derivative in equation \ref{eq:problem1} is replaced by the centered difference method, an approximation to the solution at a series of equidistant points can be found solving the following scheme:
@@ -76,7 +78,7 @@ J(U) =
  
 Our implementation of the Newton's method consist of two functions: FunJac, which builds the vector $G$ and the tridiagonal matrix $J$ and NewtonsMethod, which updates the solution applying \ref{eq:newtons} until the tolerance is satisfied or the number of iterations is greater than the threshold.
 
-The convergence and accuracy of the method depend on the proximity of the initial guess to the real solution. An approximation to the solution is given by equation 2.105 in LeVeque. Since an arbitrary choice might lead to non-convergence we have used this approximation as the initial value. \hl{It is shown in section 2.16.3 in Randall Leveque that the method is stable if the inverse of the Jacobian matrix is bounded}. Figure \ref{fig:newtons} shows the initial guess along with the solution returned by the Newton's method for 50 grid points.
+The convergence and accuracy of the method depend on the proximity of the initial guess to the real solution. An approximation to the solution is given by equation 2.105 in LeVeque. Since an arbitrary choice might lead to non-convergence we have used this approximation as the initial value. Figure \ref{fig:newtons} shows the initial guess along with the solution returned by the Newton's method for 50 grid points.
 
 
 \begin{figure}[H]
@@ -111,8 +113,18 @@ One could also write the BVP in equation \ref{eq:problem1} as an initial value p
 
 \begin{equation}
 \begin{aligned}
-\epsilon\left(\frac{u_{i-1} - 2 u_i + u_{i+1}}{h^2}\right) + u_i\left(\frac{u_{i+1} - u_{i-1}}{2 h} - 1\right) \\
+u''(t) = \frac{1}{\epsilon} u(t)(u'(t)-1) \qquad 0\leq t\leq 1 \\
 u(0) = \alpha \qquad u'(0) = \sigma \\
+\end{aligned}
+\end{equation}
+
+and splitting $u(t)$ and $u'(t)$ into two different variables $u_1(t)$ and $u_2(t)$ respectively:
+
+\begin{equation}
+\begin{aligned}
+u_2'(t) = \frac{1}{\epsilon} u_1(t)(u_2(t)-1) \\
+u_1'(t) = u_2(t) \\
+u_1(0) = \alpha \qquad u_2(0) = \sigma \\
 \end{aligned}
 \label{eq:ivp}
 \end{equation}
@@ -120,7 +132,7 @@ u(0) = \alpha \qquad u'(0) = \sigma \\
 Note that a new variable $\sigma$ has been included whose value must be chosen so that the second constraint in \ref{eq:problem1} is satisfied:
 
 \begin{equation}
-r(\sigma) = U(1,\sigma) - \beta = 0
+r(\sigma) = U_1(1,\sigma) - \beta = 0
 \label{eq:roots}
 \end{equation}
 
@@ -152,6 +164,7 @@ taking the partial derivative with respect to $\sigma$ in \ref{eq:ivp}:
 \frac{\partial u''}{\partial \sigma} =  \frac{-u'+1}{\epsilon} \frac{\partial u}{\partial \sigma} - \frac{u}{\sigma} \frac{\partial u'}{\partial \sigma} \\ 
 \frac{\partial u(0)}{\partial \sigma} = 0 \qquad \frac{\partial u'(0)}{\partial \sigma} = 1  
 \end{aligned}
+\label{eq:ivp2}
 \end{equation}
 
 and since this is also an IVP it can be solved together with \ref{eq:ivp} as a single differential equation. As we mentioned before, Newton's method requires a suitable initial guess to converge. We experienced in this case that the algorithm is unable to converge for small values of $\epsilon$ in such cases, the bisection method should be applied. Figure \ref{fig:usigma} shows the solution at the end of the interval for a series of $\sigma$ values. Although a more detailed reason for the non-convergence of the method is given in the next section, it easy to see that the function is close to be non-differentiable in a neighborhood of $\sigma$ optima.
@@ -195,6 +208,10 @@ Secant & 3 & 0.0036 &  \\
 
 In order to find an approximation to the partial derivative of the solution with respect to $\sigma$ we can either solve equation \ref{eq:ivp2} or apply the finite difference method. In both cases we see that for small values of $\epsilon$ the solution becomes very sensible to small variations of $\sigma$ (table \ref{tab:sensitivities}). On the other hand, as we saw in figure \ref{fig:usigma} equation \ref{eq:roots} was close to be non-smooth (non-differentiable) in a neighborhood of the solution. That is the reason why neither Newton's method nor the secant algorithm are able to converge even for initial guesses close to the true solution. 
 
+If the initial value lies where the slope in figure \ref{fig:usigma} is almost 0 the method takes a very large step in the first update and the algorithm is unable to find the way back. If on the other hand, the initial value fells in a region where the curve is very steep, the step size in every iteration will be very small and the algorithm will never converge.
+
+A way around would be to include an extra parameter that controls the step size every time $\sigma$ is updated. However, in this case the number of iterations increases dramatically for small values of $\epsilon$. Thus, it might be advisable to use an algorithm that does not require partial derivatives, such as the bisection method. Applying the bisection method with $\epsilon = 0.01$ the algorithm converges after $24$ iterations.
+
 
 \begin{table}
 \centering
@@ -207,10 +224,6 @@ $\epsilon$ & $S_\sigma$  & \\ \hline
 0.5 & 0.7110 &  \\
 \hline \hline 
 \end{tabular}
-\caption{Number of iterations and CPU-time of all three algorithms with $\epsilon = 0.8$}
-\label{tab:shooting}
+\caption{Sensitivity of the solution with respect to $\sigma$ at the final point for different values of $\epsilon$}
+\label{tab:sensitivities}
 \end{table}
-
-If the initial value lies where the slope in figure \ref{fig:usigma} is almost 0 the method takes a very large step in the first update and the algorithm is unable to find the way back. If on the other hand, the initial value fells in a region where the curve is very steep, the step size in every iteration will be very small and the algorithm will never converge.
-
-A way around would be to include an extra parameter that controls the step size every time $\sigma$ is updated. However, in this case the number of iterations increases dramatically for small values of $\epsilon$. Thus, it might be advisable to use an algorithm that does not require partial derivatives, such as the bisection method. Applying the bisection method with $\epsilon = 0.01$ the algorithm converges after $24$ iterations.

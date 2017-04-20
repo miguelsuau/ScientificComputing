@@ -40,7 +40,7 @@ print('sol2','-dpng')
 
 %% Bisection method
 ts = [0 1];
-epsilon = 0.001;
+epsilon = 0.01;
 
 a = 1;
 Ua0 = [-1; a];
@@ -63,10 +63,10 @@ plot(ta,Ua(:,1),tb,Ub(:,1),'linewidth',1.6)
 hold on
 plot(tc,Uc(:,1),'linewidth',1.6)
 
-print('bisection','-dpng')
 xlabel('t')
 ylabel('U')
 legend('U_a','U_b','U_c','location','northwest')
+print('bisection','-dpng')
 %% Sensitivity analysis finite difference approximation
 % Forward
 epsilon = 0.001;
