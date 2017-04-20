@@ -11,7 +11,7 @@ f0 = @(X,Y) -16 * (pi ^ 2) * (...
     + 2 * sin((4 * pi * (X + Y)))...
 );
 b = -f0(Xint,Yint);
-Afun = @(u) Amult(u,m); % already returned as -Au
+Afun = @(u) mAmult(u,m); % already returned as -Au
 
 u = pcg(Afun,b(:),h^2,100);
 % Check error
