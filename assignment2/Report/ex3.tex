@@ -89,12 +89,24 @@ Figure \ref{fig:omegaopt} shows $max |\gamma_{p,q}|$ for different values of the
 We have implemented a script in MATLAB that plots $max |\gamma_{p,q}|$ as a function of $\omega$ and finds the minimum of that function. We also wrote the function smooth which applies the under/overrelaxed Jacobi method for a given value of the smoothing parameter.
 
 \subsection{Coarsing / interpolating}
-One approach to solve this is issue is taking a fine grid to a coarse one and back (V). As is mentioned in the book, the convergence rate for some components of the error is greatly improved by transferring the error to a coarser grid. An example is given that a component's frequencies can be shifted to the right, i.e. more in the middle of what range the coarse grid has to offer, resulting in the improvement of the damping factor (in some cases as high as one order of the magnitude).
+To further continue, a necessary part of the V-cycle is coarsing and interpolation of the grid. As is mentioned in the book, the convergence rate for some components of the error is greatly improved by transferring the error to a coarser grid. An example is given that a component's frequencies can be shifted to the right, i.e. more in the middle of what range the coarse grid has to offer, resulting in the improvement of the damping factor (in some cases as high as one order of the magnitude).
+
+There are multiple approaches to coarsion and interpolation on an evently spaced squared grid. The simplest one is taking every second point of the original grid in coarsion and calculating back the points of interpolated grid as a weighted average of the neighbouring points. In this approach three possible scenarios can happen to calculate the interpolated point: adding 2 neighbours vertically, adding 2 neighbours horizontaly and finally, adding 4 neighbours located in NE, NW, SE, SW.
 
 \subsection{Recursion}
 Now the problem is refolmulated in order to transfer the remaining part to the coarser grid. The approach taken uses the recursive call to find the error vector by solving $\mathbf{A e} = \mathbf{-r}$ via the \texttt{vcycle} method.
 
-Since the result is obtained on a coarse grid, interpolating is used in order to project the error vector back to the original $m \times m$ grid. In order to find a better approximation of $U$ the error vector is added and post-smoothing is performed. Once all the recursive results are popped from the stack a solution to the given problem is returned. As mentioned before this process is repeated until a desired tolerance or maximum number of iterations is reached. 
+Since the result is obtained on a coarse grid, interpolating is used in order to project the error vector back to the original grid. In order to find a better approximation of $U$ the error vector is added and post-smoothing is performed. Once all the recursive results are popped from the stack a solution to the given problem is returned. As mentioned before this process is repeated until a desired tolerance or maximum number of iterations is reached. 
 
+\subsection*{Conclusion}
+With the initial parameters for the V-cycle driver and number of smoothing iterations set to 1000, 23 iterations are needed to reach the desired tolerance of $1^{-10}$. Increasing the aforementioned number of smoothing interations results in longer computational time, but decreases the overall number of steps needed for convergence. As can one expect lowering $k$ in $m=2^k - 1$ yields considerably less iterations, for example for $k=5$, only 5 run throughs of the for-loop are executed. Having a larger grid would naturally increase the computation time.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/ex33.png}
+    \caption{Result of 23 Vcycles with the default parameters}
+\end{figure}
+
+Further work can be done to implement the W-cycle or other ways of coarsion and interpolation, such as using a stencil like shape to weigh the grid points.
     
 \end{document}

@@ -2,7 +2,7 @@
 u=@(x,y) exp(pi*x).*sin(pi*y)+0.5*(x.*y).^2;
 f=@(x,y) x.^2+y.^2;
 
-m=2^6-1;
+m=2^7-1;
 
 [X,Y] = meshgrid(linspace(0,1,m+2), linspace(0,1,m+2));
 
@@ -23,7 +23,7 @@ for i=1:100
     if(norm(R,2)/norm(F,2) < epsilon)
         break;
     end
-    U=Vcycle(U,omega,1000,m,F);
+    U=Vcycle(U,omega,10000,m,F);
     plotU(m,U);
 end
 
