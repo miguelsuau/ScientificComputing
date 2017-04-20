@@ -101,9 +101,7 @@ In this case the function $f_0$ is harmonical and according to LeVeque, using a 
 \end{minipage}
 \end{figure}
 
-Function $f_1$ is not harmonic, nor zero, but a constant and as mentioned in the theory, the dominant error term in the error does not disappear so fourth order convergence cannot be achieved as hinted in the handout.
-
-The global error is really low for smaller grid size and increases as the grid grows, which is rather strange.
+Function $f_1$ is a constant and the global error osciallates. This is due to the fact that the machine precision plays a role in over or undershooting the exact solution resulting in oscillations. Note that the markers indiciating the respective $h$ were added for clarity in the global error (loglog) plot.
 
 % u2
 \subsubsection*{Third case}
@@ -128,8 +126,7 @@ The global error is really low for smaller grid size and increases as the grid g
 \end{minipage}
 \end{figure}
 
-As mentioned in the previous case, $f_2$ is suspected to be non-harmonic with the sign term and absolute values, so the aforementioned statement also applies here. As can be seen from the plot, the convergence rate is close to $\mathcal{O}(h^2)$.
-
+$f_2$ has a singularities, which can be checked by finding the exact form of the Laplacian in Mathematica for example -- the result contains first and second derivatives of $x-y$, which are undefined when $x=y$. Still, something close to the second order accuracy is obtained.
 
 
 

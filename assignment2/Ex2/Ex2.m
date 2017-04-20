@@ -100,7 +100,7 @@ surf(Xint,Yint,U1calc);
 %% Test case 1 - global error
 
 Gerr = [];
-Grange = [15 30 100 500 1000];
+Grange = 10:10:350;
 for k=Grange
     m = k;
     h = 1/(m+1);
@@ -122,7 +122,7 @@ for k=Grange
 end
 figure(3)
 hs = 1./((Grange+ones(size(Grange)))); % h = 1/(m+1)
-loglog(hs, Gerr, hs, hs.^(4), hs, hs.^(2), 'LineWidth', 2.4)
+loglog(hs, Gerr, '-x', hs, hs.^(4), hs, hs.^(2), 'LineWidth', 2.4)
 legend({'Global error', '$\mathcal{O}(h^4)$', '$\mathcal{O}(h^2)$'}, 'Location', 'SouthEast', 'FontSize', 24, 'Interpreter', 'latex')
 fprintf('Test case 1 done!\n')
 

@@ -28,7 +28,7 @@ else
     % 5. TODO: interpolate the error
     E = interpolate(Ecoarse,m);
     % 6. TODO: update the solution given the interpolated error
-    Unew = U + E(:);
+    Unew = Unew + E(:);
     % 7. TODO: post-smooth the error
     %    perform <nsmooth> Jacobi iterations
     for numSmooth=1:nsmooth
