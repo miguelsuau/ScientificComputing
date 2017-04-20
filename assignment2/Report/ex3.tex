@@ -74,19 +74,19 @@ thus, combining the equations above we obtain the following expression for the e
 and since we would like to choose $\omega$ so that we get optimal smoothing of high frequencies
 
 \begin{equation}
-\omega_{opt} = min ( max |\gamma_{p,q}|)
+\omega_{opt} = min ( max_{m/2 \leq p,q \leq m} |\gamma_{p,q}|)
 \end{equation}
 
-Figure \ref{fig:omegaopt} shows $max |\gamma_{p,q}|$ for different values of the smoothing factor. We see in this case that $\omega_{opt}$ lies very close to $0.5$.
+Figure \ref{fig:omegaopt} shows $max_{m/2 \leq p,q \leq m} |\gamma_{p,q}|$ for different values of the smoothing factor. We see in this case that $\omega_{opt}$ lies very close to $0.5$.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{../Figures/omegaopt}
-    \caption{$max |\gamma_{p,q}|$ for different values of $\omega$ and $m = 1000$}
+    \caption{$max_{m/2 \leq p,q \leq m} |\gamma_{p,q}|$ for different values of $\omega$ and $m = 1000$}
     \label{fig:omegaopt}
 \end{figure}
 
-We have implemented a script in MATLAB that plots $max |\gamma_{p,q}|$ as a function of $\omega$ and finds the minimum of that function. We also wrote the function smooth which applies the under/overrelaxed Jacobi method for a given value of the smoothing parameter.
+We have implemented a script in MATLAB that plots $max_{m/2 \leq p,q \leq m} |\gamma_{p,q}|$ as a function of $\omega$ and finds the minimum of that function. We also wrote the function smooth which applies the under/overrelaxed Jacobi method for a given value of the smoothing parameter.
 
 \subsection{Coarsing / interpolating}
 To further continue, a necessary part of the V-cycle is coarsing and interpolation of the grid. As is mentioned in the book, the convergence rate for some components of the error is greatly improved by transferring the error to a coarser grid. An example is given that a component's frequencies can be shifted to the right, i.e. more in the middle of what range the coarse grid has to offer, resulting in the improvement of the damping factor (in some cases as high as one order of the magnitude).
@@ -98,7 +98,7 @@ Now the problem is refolmulated in order to transfer the remaining part to the c
 
 Since the result is obtained on a coarse grid, interpolating is used in order to project the error vector back to the original grid. In order to find a better approximation of $U$ the error vector is added and post-smoothing is performed. Once all the recursive results are popped from the stack a solution to the given problem is returned. As mentioned before this process is repeated until a desired tolerance or maximum number of iterations is reached. 
 
-\subsection*{Conclusion}
+\subsection{Conclusion}
 With the initial parameters for the V-cycle driver and number of smoothing iterations set to 1000, 23 iterations are needed to reach the desired tolerance of $1^{-10}$. Increasing the aforementioned number of smoothing interations results in longer computational time, but decreases the overall number of steps needed for convergence. As can one expect lowering $k$ in $m=2^k - 1$ yields considerably less iterations, for example for $k=5$, only 5 run throughs of the for-loop are executed. Having a larger grid would naturally increase the computation time.
 
 \begin{figure}[h]
