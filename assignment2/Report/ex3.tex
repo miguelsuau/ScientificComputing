@@ -27,7 +27,7 @@ The name V-cycle comes from the recursive part of the algorithm -- the 2 lines i
 
 It is worth noting that due to coarsened grid the depth of the recursion will be $\log_2(m)$ per one cycle. The cycle will be repeated until a desired tolerance is reach or the maximum number of iterations has passed.
 
-\subsection*{Matrix free 5-point Laplacian}
+\subsection{Matrix free 5-point Laplacian}
 As requested in the handout, matrix-free method \texttt{Amult} will be used to calculate the term $\mathbf{-A u}$ without storing the $\mathbf{A}$ matrix in memory (as it is of size $m^2 \times m^2$ and somewhat sparse). The implementation can be tested with Matlab's Conjugate Gradient algorithm \texttt{pcg}, which can accept a function handle as the first argument, so \texttt{Amult} shall be provided. The reason why $-\mathbf{A u}$ is used instead of the positive alternative is that PCG requires a positive definite system and the $\mathbf{A}$ matrix is in fact negative definite.
 \begin{figure}[h]
     \centering
@@ -36,20 +36,65 @@ As requested in the handout, matrix-free method \texttt{Amult} will be used to c
 \end{figure}
 To check the difference between the implementation of the matrix free method and the direct multiplication of $u$ with the Laplacian matrix, one can for example use \texttt{max(max(abs(Amult(u,m) - -1*poisson5(m)*u)))} in Matlab. The maximum of the absolute difference is roughly $10^{-12}$.
 
+All the Matlab code for this section is provided in the appendix. 
 
-\subsection*{Relaxation and smoothing}
-The main motivation to use iteratiors or relaxations is that the high frequency components of the error will decay after couple of iterations (in the code and in LeVeque 3 iterations are chosen). However there are still lower frequency components and the covergence starts to slow down.
+\subsection{Relaxation and smoothing}
+The main motivation to use underelaxed Jacobi is that while the high frequency components of the error decay after a few iterations when applying the ordinary Jacobi method, the lower frequency components remain longer and negatively affect the convergence of the algorithm.
 
-\subsection*{Coarsing / interpolating}
+Thereby, by including an extra parameter $\omega$ we can manage how far the current iterate moves towards the true solution, and thus control high frequency harmonics.
+
+\begin{equation}
+G_\omega = (1-\omega)I + \omega G
+\end{equation} 
+
+where $G$
+
+\begin{equation}
+G = I + \frac{h^2}{2} A
+\end{equation}
+
+besides, considering that the eigenvectors of $G$ are the same as the eigenvectors of $A$
+
+\begin{equation}
+\rho_{p,q} = 2 + \frac{h^2}{2} \lambda_{p,q}
+\end{equation}
+
+from 3.15 in Leveque we know that the eigenvalues of $A$ are
+
+\begin{equation}
+\lambda_{p,q} = \frac{2}{h^2}((cos(p \pi h) -1) + (cos(q \pi h) -1 ))
+\end{equation}
+
+thus, combining the equations above we obtain the following expression for the eigenvalues of $G_\omega$
+
+\begin{equation}
+\gamma_{p,q} = (1-\omega) + \omega ( cos(p \pi h) + cos(q \pi h))
+\end{equation}
+
+and since we would like to choose $\omega$ so that we get optimal smoothing of high frequencies
+
+\begin{equation}
+\omega_{opt} = min ( max |\gamma_{p,q}|)
+\end{equation}
+
+Figure \ref{fig:omegaopt} shows $max |\gamma_{p,q}|$ for different values of the smoothing factor. We see in this case that $\omega_{opt}$ lies very close to $0.5$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/omegaopt}
+    \caption{$max |\gamma_{p,q}|$ for different values of $\omega$ and $m = 1000$}
+    \label{fig:omegaopt}
+\end{figure}
+
+We have implemented a script in MATLAB that plots $max |\gamma_{p,q}|$ as a function of $\omega$ and finds the minimum of that function. We also wrote the function smooth which applies the under/overrelaxed Jacobi method for a given value of the smoothing parameter.
+
+\subsection{Coarsing / interpolating}
 One approach to solve this is issue is taking a fine grid to a coarse one and back (V). As is mentioned in the book, the convergence rate for some components of the error is greatly improved by transferring the error to a coarser grid. An example is given that a component's frequencies can be shifted to the right, i.e. more in the middle of what range the coarse grid has to offer, resulting in the improvement of the damping factor (in some cases as high as one order of the magnitude).
 
-\subsection*{Recursion}
+\subsection{Recursion}
 Now the problem is refolmulated in order to transfer the remaining part to the coarser grid. The approach taken uses the recursive call to find the error vector by solving $\mathbf{A e} = \mathbf{-r}$ via the \texttt{vcycle} method.
 
 Since the result is obtained on a coarse grid, interpolating is used in order to project the error vector back to the original $m \times m$ grid. In order to find a better approximation of $U$ the error vector is added and post-smoothing is performed. Once all the recursive results are popped from the stack a solution to the given problem is returned. As mentioned before this process is repeated until a desired tolerance or maximum number of iterations is reached. 
-
-\subsection*{Matlab code}
-All the Matlab code for this section is provided in the appendix. 
 
     
 \end{document}

@@ -1,9 +1,7 @@
-
-
 %% 3.2 Under/Over-relaxed Jacobi Smoothing
 
 % eigenvalues expression 4.90 REVIEW
-feig = @(p,q,h,omega) (1-omega)+omega.*2/h^2*(cos(p.*pi*h)-1+cos(q.*pi*h)-1);
+feig = @(p,q,h,omega) (1-omega)+omega.*(cos(p.*pi*h)+cos(q.*pi*h));
 
 m = 1000;
 h = 1/(m+1);
@@ -17,22 +15,18 @@ q = m/2:m;
 maxeig = zeros(100,1);
 
 % for each value of omega find the maximum eigenvalue
-omega = linspace(0,2,100);
-for i = 1:100
+omega = linspace(0,2,1000);
+for i = 1:1000
     eig = feig(P,Q,h,omega(i));
-    maxeig(i) = max(abs(eig));
+    maxeig(i) = max(max(abs(eig)));
 end
 % choose omega that makes maxeig minimum
-[~,idx] = min(maxeig);
+[minmax,idx] = min(maxeig);
 omegaopt = omega(idx);
-
-%%
-% Jacobi Smoothing using the optimal omega
-% U initial guess
-U = zeros(m);
-F = zeros(m);
-omegaopt = 2/3;
-maxit = 100;
-for i = 1:maxit
-   U = smooth(U,omegaopt,m,F); 
-end
+plot(omega,maxeig,'linewidth',1.6)
+hold on
+plot(omegaopt,minmax,'ro','linewidth',1.6)
+legend('maximum eigenvalue','optimal \omega','location','northwest')
+xlabel('\omega')
+ylabel('max(\rho_{p,q}(\omega))','interpreter','tex')
+print('omegaopt','-dpng')
