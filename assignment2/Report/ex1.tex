@@ -32,19 +32,19 @@ The centered approximation comes from a Taylor series expansion truncated to the
 
 \begin{multline}
 \tau_i = \epsilon\left(\frac{u(t_{i-1}) - 2 u(t_i) + u(t_{i+1})}{h^2}\right) + u_i\left(\frac{u(t_{i+1}) - u(t_{i-1})}{2 h} - 1\right) - \\
-u(t_i)'' - u(t_i)(u(t_i)'-1)
+\epsilon u(t_i)'' - u(t_i)(u(t_i)'-1)
 \end{multline}
 
 The above expression is just the difference between the given differential equation and its finite difference approximation. By applying the Taylor series expansion to the first two terms:
 
 \begin{multline}
 \tau_i = \epsilon\left(u''(t_i)+\frac{1}{12}h^2u'''(t_i)+O(h^4)\right) + u(t_i) \left(u'(t_i)+\frac{1}{6}h^2 u'''(t_i) + O(h^5)- 1 \right) -
-\\ u(t_i)'' - u(t_i)(u(t_i)'-1) 
+\\ \epsilon u(t_i)'' - u(t_i)(u(t_i)'-1) 
 \end{multline}
 
 
 \begin{equation}
-\tau_i = \frac{1}{12}h^2u'''(t_i)+O(h^4) + u(t_i)(\frac{1}{6}h^2 u'''(t_i) + O(h^5))
+\tau_i = \epsilon \left(\frac{1}{12}h^2u'''(t_i)+O(h^4)\right) + u(t_i)\left(\frac{1}{6}h^2 u'''(t_i) + O(h^5)\right)
 \label{eq:localerror}
 \end{equation}
 
