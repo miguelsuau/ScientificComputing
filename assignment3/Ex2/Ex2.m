@@ -128,11 +128,18 @@ x = xmin-dx:dx:xmax+dx;
 
 % Indices of 1-40 wave periods
 uIdxRange = 1:(steps/nWavePeriods):steps+1;
+[um,un] = size(Uup);
+xx = linspace(xmin,xmax,un);
 
 figure(5);
-plot(x(2:end-1), Uup(uIdxRange(end), 2:end-1), 'ro',...
-     x(2:end-1), Uup(uIdxRange(1),   2:end-1), 'b-',...
+plot(xx, Uup(uIdxRange(end), :), 'ro',...
+     xx, Uup(uIdxRange(1),   :), 'b-',...
     'LineWidth', 1.2)
+% figure(5); clf;
+% plot(1:201, Uup(1,   :), 'b-',...
+%      1:201, Uup(5001,   :), 'go-',...
+%     'LineWidth', 1.2)
+% ax=gca; ax.XTick = 1:2:201;
 legend({'$u(x,80)$ upwind', '$u(x,80)$'}, 'Interpreter', 'latex', 'FontSize', 16, 'Location', 'northeast')
 xlabel('x', 'Interpreter', 'latex', 'FontSize', 16);
 ylabel('u', 'Interpreter', 'latex', 'FontSize', 16);
@@ -187,5 +194,4 @@ x = xmin-dx:dx:xmax+dx;
 
 
 [Uup, Utrue] = upwind(u, tmax);
-
 
