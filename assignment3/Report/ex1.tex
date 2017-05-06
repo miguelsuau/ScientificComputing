@@ -1,0 +1,64 @@
+\documentclass[main.tex]{subfiles}
+\section{Pure parabolic model problem}
+
+In this section we shall study and analyze two different approaches for solving parabolic differential equations. Concretely we will focus on the heat diffusion problem, which can be modeled by the following partial differential equation and its initial and boundary conditions.
+
+\begin{equation}
+\begin{aligned}
+u_t = \kappa u_{xx} \\
+u(x,0) = \eta (x) \\
+u(0,t) = g_L (t) \\
+u(0,t) = g_R (t)
+\end{aligned}
+\end{equation}
+
+The first thing we should notice is that, a part from having the usual spatial dependence, the equation also describes how the heat distribution evolves with time. Hence, if we want to solve this equation numerically we need to discretize both time and space, which means that the solution will be represented by a two dimensional grid.
+
+\subsection{Matlab implementation of the $\theta$-scheme}
+
+Applying euler approximation to the time derivative and the second order central finite difference to the right hand side in equation \ref{eq:diffusion}, an explicit scheme is obtained.
+
+\begin{equation}
+\frac{U_i^{n+1} - U_i^n}{k} = \frac{\kappa}{h^2}(U_{i-1}^n - 2 U_i^n + U_{i+1}^n)
+\label{eq:scheme}
+\end{equation}
+
+where $h$ and $k$ represent the distance between two grid points in space and time respectively.
+
+A more general scheme for solving this problem can be formulated as:
+
+\begin{equation}
+\frac{U_i^{n+1} - U_i^n}{k} = \frac{kappa}{h^2}((1-\theta)(U_{i-1}^n - 2 U_i^n + U_{i+1}^n) + \theta(U_{i-1}^{n+1} - 2 U_i^{n+1} + U_{i+1}^{n+1})
+\label{eq:genscheme}
+\end{equation}
+where $0 \leq \theta \leq 1$
+
+It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. [[[[The solution at one point in space relies on both its neighbors at the current time and at the previous.]]]!!!
+
+The scheme takes the form of system of equations which can be written in matrix form as:
+
+which is nothing but a system of ordinary differential equations and thus, the solution at a given time can be obtained by inverting the tridiagonal matrix in the left hand side of equation \ref{eq:matrixform}. Consequently, using a loop the global solution can be computed sequentially at every point in the time grid.
+
+The code snippet below shows the implementation of this scheme in MATLAB where the function given by equation 2 in the assignment specifications is used to compute the initial and boundary conditions.
+
+\lstinputlisting{../Ex1/parabolicSolver.m}
+
+
+\subsection{Analytical analysis of the scheme}
+
+\subsection{Numerical evaluation of the scheme}
+
+After deriving the analytical expressions of the method's convergence, we shall check the rates obtained for the two values of $\theta$. To do so, we will solve the problem varying the time and the space grids accordingly so that the system remains within the stability region, and we will compute the local truncation error (LTE).
+
+For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. With the inten The dashed lines, which represent the theoretical order of the system are parallel to the empirical curves $O(h^2)$ and $O(k)$.
+
+
+When $k = h^2/6$ we see that the the local truncation error is upper bounded by the theoretical limits of $O(h^4)$ and $O(k^2)$ (figure \ref{fig:conv2}).
+
+
+On the other hand, for the especial choice of $\theta = 1/2 + h^2/(12k\kappa)$ the plots also follow the analytical expressions obtained in the previous section.
+
+
+
+
+
