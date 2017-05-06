@@ -3,7 +3,7 @@ v = 0.8; % Courant number
 % g(xi)
 % a circle, centered at 1-cr with radius cr
 % 1-v-v*(cos(phi) - 1i*sin(phi))
-g = @(phi) 1 - v - v*exp(1i*phi); % phi = xi*dx
+g = @(phi) 1 - v + v*exp(1i*phi); % phi = xi*dx
 
 xi = 2*pi/1; % 2*pi/L, L = 1
 phi = xi*0.01; % xi*dx, dx = 1/100

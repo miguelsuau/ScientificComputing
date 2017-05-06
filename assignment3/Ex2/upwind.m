@@ -34,8 +34,8 @@ for n=2:steps+1
     % Keep track of time for calculating the true solution
     t = t+dt; 
     % Next u
-    unext(j) = (1-cr)*u(j) + cr*u(j-1);
-    unext(1)=u(1)-cr*(u(1)-u(end-1));
+    unext(j) = u(j) - cr*(u(j) - u(j-1));
+    unext(1) = u(1) - cr*(u(1) - u(end-1));
     % Update the iterate and save
     u = unext;
     U(n,:) = unext;    
