@@ -45,6 +45,12 @@ The code snippet below shows the implementation of this scheme in MATLAB where t
 
 Figure \ref{fig:solution1} represents the solution at different points in time. It is easy to see in the graphs how the higher frequencies in the heat wave are damped quickly while the lower ones remain longer.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/sol}
+    \caption{Solution of the heat diffusion equation at different points in time using the $\theta$-scheme}
+    \label{fig:solution2}
+\end{figure}
 \subsection{Analytical analysis $\theta = 0$}
 
 Once the the scheme for solving the problem numerically has been built, it might be interesting to make an analysis on the system and draw some conclusions about how large the grid should be for the solver to be stable, what is its order of consistency or under what circumstances it satisfies the discrete maximum principle.

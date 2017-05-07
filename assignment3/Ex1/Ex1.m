@@ -2,9 +2,9 @@ close all
 clear
 %% DIFFUSION PROBLEM
 %% Implement the scheme
-theta = 0;
-h = 0.1;    
-k = 0.001;
+theta = 0.5;
+h = 0.01;    
+k = 0.01;
 mu = 1*k/h^2;
 M = 2/h;
 N = 1/k;
@@ -15,6 +15,19 @@ Utrue = zeros(M+1,N);
 for j = 1:N
     Utrue(:,j) = boundaryFun(x,t(j));
 end
+subplot(2,2,1)
+plot(x,U(:,1),'linewidth',1.6)
+title('t=0')
+subplot(2,2,2)
+plot(x,U(:,5),'linewidth',1.6)
+title('t=0.04')
+subplot(2,2,3)
+plot(x,U(:,20),'linewidth',1.6)
+title('t=0.20')
+subplot(2,2,4)
+plot(x,U(:,50),'linewidth',1.6)
+title('t=0.5')
+print('sol','-dpng')
 %% Demonstrate convergence
 
 h = logspace(-2,-1,10);
@@ -33,6 +46,7 @@ for i = 1:10
     end
     LTE(i) = max(norm(U(:,2)-Utrue(:,2),2));
 end
+
 %% LTE plots
 figure
 subplot(1,2,1)
