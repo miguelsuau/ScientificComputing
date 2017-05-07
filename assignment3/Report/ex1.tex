@@ -12,7 +12,7 @@ u(0,t) = g_R (t)
 \end{aligned}
 \end{equation}
 
-The first thing we should notice is that, a part from having the usual spatial dependence, the equation also describes how the heat distribution evolves with time. Hence, if we want to solve this equation numerically we need to discretize both time and space, which means that the solution will be represented by a two dimensional grid.
+The first thing we should notice is that, a part from having the usual spatial dependence, the equation also describes how the heat distribution evolves in time. Hence, if we want to solve this equation numerically we need to discretize both time and space, which means that the solution will be represented by a two dimensional grid.
 
 \subsection{Matlab implementation of the $\theta$-scheme}
 
@@ -33,23 +33,30 @@ A more general scheme for solving this problem can be formulated as:
 \end{equation}
 where $0 \leq \theta \leq 1$
 
-It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. [[[[The solution at one point in space relies on both its neighbors at the current time and at the previous.]]]!!!
+It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. [[[[The solution at one point in space relies on both its spatial neighbors at the current time and at the previous.]]]!!!
 
 The scheme takes the form of system of equations which can be written in matrix form as:
 
-which is nothing but a system of ordinary differential equations and thus, the solution at a given time can be obtained by inverting the tridiagonal matrix in the left hand side of equation \ref{eq:matrixform}. Consequently, using a loop the global solution can be computed sequentially at every point in the time grid.
+this is nothing but a system of ordinary differential equations and thus, the solution at a given time can be obtained by inverting the tridiagonal matrix in the left hand side of equation \ref{eq:matrixform}. Consequently, using a loop the global solution can be computed sequentially at every point in the time grid.
 
 The code snippet below shows the implementation of this scheme in MATLAB where the function given by equation 2 in the assignment specifications is used to compute the initial and boundary conditions.
 
 \lstinputlisting{../Ex1/parabolicSolver.m}
 
+Figure \ref{fig:solution1} represents the solution at different points in time. It is easy to see in the graphs how the higher frequencies in the heat wave are damped quickly while the lower ones remain longer.
 
-\subsection{Analytical analysis}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/sol}
+    \caption{Solution of the heat diffusion equation at different points in time using the $\theta$-scheme}
+    \label{fig:solution2}
+\end{figure}
+\subsection{Analytical analysis $\theta = 0$}
 
 Once the the scheme for solving the problem numerically has been built, it might be interesting to make an analysis on the system and draw some conclusions about how large the grid should be for the solver to be stable, what is its order of consistency or under what circumstances it satisfies the discrete maximum principle.
 
 
-\subsubsection{Forward time central space}
+\subsubsection{Consistency}
 
 As mentioned, for $\theta = 0$ equation \ref{eq:genscheme} corresponds to the explicit forward time and central space scheme. We first check that the finite difference approximation is consistent, that is, the local truncation error approaches to 0 as the grid size increases.
 
@@ -81,6 +88,8 @@ Besides, for  $\mu = 1/6$
 
 the first term in the right hand side of equation \ref{eq:order} disappears and the order becomes $\mathcal{O}(k^2 + h^4)$.
 
+\subsubsection{Stability}
+
 Secondly, in order to find the stability of the method we need to check when the eigenvalues of the matrix $A$ in the right hand side of equation \ref{eq:matrixform} lie within the unit circle.
 
 According to 2.23 in Randall Leveque the eigenvalues of $A$ are given by
@@ -102,8 +111,32 @@ which means that for the system to be stable the following relation must be sati
 \frac{\kappa k}{h^2} \leq \frac{1}{2}
 \end{equation}
 
+\subsubsection{Convergence}
 
-\subsubsection{$\theta = 1/2 + h^2/(12k\kappa)$}
+
+
+\subsubsection{Discrete Maximum Principle}
+
+The discrete maximum principle states that if the solution is bounded from above and below by the most extreme values of the initial and boundary conditions then, as long as the conditions are consistent and smooth, it will converge uniformly.
+
+According to Lecture 21 slide 17 the $\theta$-scheme will satisfy the discrete maximum principle when:
+
+\begin{equation}
+\mu(1-\theta) \leq \frac{1}{2}
+\end{equation}
+
+and in this case since $\theta = 0$
+
+\begin{equation}
+\frac{\kappa k}{h^2} \leq \frac{1}{2}
+\end{equation}
+
+which is consistent with the stability criteria.
+
+
+\subsection{Analytical analysis $\theta = 1/2 + h^2/(12k\kappa)$}
+
+\subsubsection{Consistency}
 
 According to what we saw when developing the $\theta$-scheme we should expect a higher order for this particular choice of  $\theta$ than in the previous case. The LTE is in this case
 
@@ -114,30 +147,65 @@ According to what we saw when developing the $\theta$-scheme we should expect a 
 by taking Taylor expansions in the expression above
 
 \begin{multline}
-\tau (x,t) = \left(u_t + \frac{1}{2}k u_{tt} + \frac{1}{6}k^2u_{ttt} + ...\right) - \frac{\kappa}{h^2}\Biggl( \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + \frac{1}{12}h^4 u_{xxxx} + ...)  + \\ \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + h^2 u_{xxt} + ...)\Biggl)
+\tau (x,t) = \left(u_t + \frac{1}{2}k u_{tt} + \frac{1}{6}k^2u_{ttt} + ...\right) - \frac{\kappa}{h^2}\Biggl( \left(\frac{1}{2} - \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + \frac{1}{12}h^4 u_{xxxx} + ...)  + \\ \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + \frac{k^3}{6}u_{ttt}+...)\Biggl)
 \end{multline}
 
-and since we know that $u_t = \kappa u_xx$, $u_{tt} = \kappa^2 u_{xx}$ and $u_{xxt} = \kappa u_{xxxx}$ then
+and since we know that $u_t = \kappa u_{xx}$, $u_{tt} = \kappa^2 u_{xxxx}$ and $u_{xxt} = \kappa u_{xxxx}$ then
 
 \begin{equation}
-\tau (x,t)  = \left(\frac{\kappa h^2}{2} - \frac{h^2}{12}\right) u_{xxxx} + \frac{k^2}{6} u_{ttt} \quad ...
+\tau (x,t)  = \left(\frac{\kappa h^2}{2} - \frac{h^2}{24}\right) u_{xxxx} + \left(\frac{k^2}{6} + \frac{k^3}{6}\right) u_{ttt} \quad ...
 \end{equation}
 
 where the dominant term depends on $k^2$ and $h^2$ which means that the scheme is consistent of order $\mathcal{O}(k^2 + h^2)$. 
 
+\subsubsection{Stability}
+
+\subsubsection{Convergence}
+
+\subsubsection{Discrete Maximum Principle}
+
+Again, the $\theta$-scheme will satisfy the discrete maximum principle when:
+
+\begin{equation}
+\mu(1-\theta) \leq \frac{1}{2}
+\end{equation}
+
+and in this case since $\theta = \frac{1}{2} + \frac{1}{12 \mu}$
+
+\begin{equation}
+\frac{\kappa k}{h^2} \leq \frac{5}{6}
+\end{equation}
+
+
+
 \subsection{Numerical evaluation}
 
-After deriving the analytical expressions of the method's convergence, we shall check the rates obtained for the two values of $\theta$. To do so, we use the solver implemented in MATLAB, using a loop we vary the time and the space grids accordingly so that the system remains within the stability region, and we compute the local truncation error (LTE) at every iteration.
+After deriving the analytical expressions, we shall check that the rates and the conditions obtained are satisfied in reality. To do so, we insert the solver implemented in MATLAB in a loop where we vary the time and space grids accordingly so that the system remains within the stability region and satisfies both the convergence criteria and the discrete maximum principle.
 
-For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. With the inten The dashed lines, which represent the theoretical order of the system are parallel to the empirical curves $O(h^2)$ and $O(k)$.
+For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. The dashed lines, which are the theoretical order of the system ($O(h^2)$ and $O(k)$), can be thought as an upper bound for the empirical curves. It is easy to see that in both comparisons the slope of the LTE in logarithmic scale is greater than the slope of the help lines.
 
-
-When $k = h^2/6$ we see that the the local truncation error is upper bounded by the theoretical limits of $O(h^4)$ and $O(k^2)$ (figure \ref{fig:conv2}).
-
-
-On the other hand, for the especial choice of $\theta = 1/2 + h^2/(12k\kappa)$ the plots also follow the analytical expressions obtained in the previous section.
-
-
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/c1}
+    \caption{Local truncation error for different values of $h$ and $k$, $\mu = 1/2$ and $\theta = 0$ in logarithmic scale.}
+    \label{fig:conv1}
+\end{figure}
 
 
+When $k = h^2/6$ the graph in figure \ref{fig:conv2} also reveals that the the local truncation error respects the theoretical limits of $O(h^4)$ and $O(k^2)$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/c2}
+    \caption{Local truncation error for different values of $h$ and $k$, $\mu = 1/6$ and $\theta = 0$ in logarithmic scale.}
+    \label{fig:conv2}
+\end{figure}
+
+On the other hand, for the especial choice of $\theta = 1/2 + h^2/(12k\kappa)$ figure \ref{fig:conv3} also holds with what we found when we evaluated the scheme analytically in the previous section. Besides, in order to satisfy the discrete maximum principle $k$ was selected so that $\mu = 5/6$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/c3}
+    \caption{Local truncation error for different values of $h$ and $k$, $\mu = 5/6$ and $\theta = 1/2 + h^2/(12k\kappa)$ in logarithmic scale.}
+    \label{fig:conv2}
+\end{figure}
