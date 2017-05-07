@@ -44,11 +44,90 @@ The code snippet below shows the implementation of this scheme in MATLAB where t
 \lstinputlisting{../Ex1/parabolicSolver.m}
 
 
-\subsection{Analytical analysis of the scheme}
+\subsection{Analytical analysis}
 
-\subsection{Numerical evaluation of the scheme}
+Once the the scheme for solving the problem numerically has been built, it might be interesting to make an analysis on the system and draw some conclusions about how large the grid should be for the solver to be stable, what is its order of consistency or under what circumstances it satisfies the discrete maximum principle.
 
-After deriving the analytical expressions of the method's convergence, we shall check the rates obtained for the two values of $\theta$. To do so, we will solve the problem varying the time and the space grids accordingly so that the system remains within the stability region, and we will compute the local truncation error (LTE).
+
+\subsubsection{Forward time central space}
+
+As mentioned, for $\theta = 0$ equation \ref{eq:genscheme} corresponds to the explicit forward time and central space scheme. We first check that the finite difference approximation is consistent, that is, the local truncation error approaches to 0 as the grid size increases.
+
+\begin{equation}
+\tau(x,t) = \frac{u(x,t+k)-u(x,t)}{k} - \frac{\kappa}{h^2}(u(x-h,t) - 2 u(x,t) + u(x+h,t))
+\label{eq:LTE}
+\end{equation}
+
+by applying the Taylor series expansions about u(x,t)
+
+\begin{equation}
+\tau(x,t) = \left(u_t + \frac{1}{2}k u_{tt} + \frac{1}{6}k^2u_{ttt} + ...\right) - \kappa \left(u_xx + \frac{1}{12}h^2 u_{xxxx} + ...\right)
+\end{equation}
+
+and since we know that $u_t = \kappa u_xx$ and $u_tt = \kappa^2 u_xx$ then 
+
+\begin{equation}
+\tau(x,t) = \left(\frac{\kappa^2}{2} k - \frac{\kappa}{12}h^2 \right)u_{xxxx} + \mathcal{O}(k^2 + h^4)
+\end{equation}
+
+where the dominant term depends on $k$ and $h^2$ which means that the scheme is consistent of order $\mathcal{O}(k + h^2)$. 
+
+Besides, for  $\mu = 1/6$
+
+\begin{equation}	
+\tau(x,t) = h^2\left(\frac{\kappa}{12} - \frac{\kappa}{12} \right)u_{xxxx} + \mathcal{O}(k^2 + h^4)
+\label{eq:order}
+\end{equation}
+
+the first term in the right hand side of equation \ref{eq:order} disappears and the order becomes $\mathcal{O}(k^2 + h^4)$.
+
+Secondly, in order to find the stability of the method we need to check when the eigenvalues of the matrix $A$ in the right hand side of equation \ref{eq:matrixform} lie within the unit circle.
+
+According to 2.23 in Randall Leveque the eigenvalues of $A$ are given by
+
+\begin{equation}
+\lambda_p =  2(cos(p \pi h) - 1) \qquad for \qquad p = 1,2, ..., m
+\label{eq:eig}
+\end{equation}
+
+Therefore, the system would be absolutely stable when $|1+\mu \lambda_p| \leq 1$ and since the smallest $\lambda_p$ is approximately $-4$ we have that the region is defined by:
+
+\begin{equation}
+-2 \leq -4 \mu \leq 0
+\end{equation}
+
+which means that for the system to be stable the following relation must be satisfied
+
+\begin{equation}
+\frac{\kappa k}{h^2} \leq \frac{1}{2}
+\end{equation}
+
+
+\subsubsection{$\theta = 1/2 + h^2/(12k\kappa)$}
+
+According to what we saw when developing the $\theta$-scheme we should expect a higher order for this particular choice of  $\theta$ than in the previous case. The LTE is in this case
+
+\begin{multline}
+\tau (x,t) = \frac{u(x,t+k)-u(x,t)}{k} - \frac{\kappa}{h^2}\Biggl(\left(\frac{1}{2} - \frac{h^2}{12k\kappa}\right) (u(x-h,t) - 2u(x,t) + u(x+h,t)) + \\ \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (u(x-h,t+k) - 2u(x,t+k) + u(x+h,t+k))\Biggl)
+\end{multline}
+
+by taking Taylor expansions in the expression above
+
+\begin{multline}
+\tau (x,t) = \left(u_t + \frac{1}{2}k u_{tt} + \frac{1}{6}k^2u_{ttt} + ...\right) - \frac{\kappa}{h^2}\Biggl( \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + \frac{1}{12}h^4 u_{xxxx} + ...)  + \\ \left(\frac{1}{2} + \frac{h^2}{12k\kappa} \right) (h^2 u_{xx} + h^2 u_{xxt} + ...)\Biggl)
+\end{multline}
+
+and since we know that $u_t = \kappa u_xx$, $u_{tt} = \kappa^2 u_{xx}$ and $u_{xxt} = \kappa u_{xxxx}$ then
+
+\begin{equation}
+\tau (x,t)  = \left(\frac{\kappa h^2}{2} - \frac{h^2}{12}\right) u_{xxxx} + \frac{k^2}{6} u_{ttt} \quad ...
+\end{equation}
+
+where the dominant term depends on $k^2$ and $h^2$ which means that the scheme is consistent of order $\mathcal{O}(k^2 + h^2)$. 
+
+\subsection{Numerical evaluation}
+
+After deriving the analytical expressions of the method's convergence, we shall check the rates obtained for the two values of $\theta$. To do so, we use the solver implemented in MATLAB, using a loop we vary the time and the space grids accordingly so that the system remains within the stability region, and we compute the local truncation error (LTE) at every iteration.
 
 For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. With the inten The dashed lines, which represent the theoretical order of the system are parallel to the empirical curves $O(h^2)$ and $O(k)$.
 

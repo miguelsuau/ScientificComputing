@@ -27,10 +27,10 @@ for i = 1:10
     x = linspace(-1,1,M+1);
     t = linspace(0,1,N+1);
     Utrue = zeros(M+1,N);
-    for j = 1:N
+    for j = 1:2
         Utrue(:,j) = boundaryFun(x,t(j));
     end
-    LTE(i) = abs(U(2,2)-Utrue(2,2));
+    LTE(i) = max(norm(U(:,2)-Utrue(:,2),2));
 end
 %% LTE plots
 figure
@@ -42,9 +42,9 @@ hold on
 p1 = loglog(h,h.^2,'--');
 legend({'LTE','$\mathcal{O}(h^4)$'},'Interpreter','latex','location','northwest')
 subplot(1,2,2)
-loglog(k,k,'--')
-hold on
 loglog(k,LTE,'-o')
+hold on
+loglog(k,k,'--')
 xlabel('k')
 ylabel('\tau')
 legend({'LTE','$\mathcal{O}(k^2)$'},'Interpreter','latex','location','northwest')
