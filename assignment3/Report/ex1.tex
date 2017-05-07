@@ -41,6 +41,10 @@ The scheme takes the form of system of equations which can be written in matrix 
 
 \begin{equation}
 (I - \theta \mu A_0) \mathbf{u}^{n+1} = (I + (1-\theta)\mu A_0) \mathbf{u}^n + (\mathbf{g}^{n+1} - \mathbf{g}^n)
+\end{equation}
+
+\begin{equation}
+A_L \mathbf{u}^{n+1} = A_E \mathbf{u}^n + (\mathbf{g}^{n+1} - \mathbf{g}^n)
 \label{eq:matrixform}
 \end{equation}
 
@@ -74,14 +78,14 @@ Equation \ref{eq:matrixform} is nothing but a system of ordinary differential eq
 The code snippet below shows the implementation of this scheme in MATLAB where the function given by equation 2 in the assignment specifications is used to compute the initial and boundary conditions.
 
 \lstinputlisting{../Ex1/parabolicSolver.m}
-%% TODO: [FIXES] Broken reference here
-Figure \ref{fig:solution1} represents the solution at different points in time. It is easy to see in the graphs how the higher frequencies in the heat wave are damped quickly while the lower ones remain longer.
+
+Figure \ref{fig:solution} represents the solution at different points in time. It is easy to see in the graphs how the higher frequencies in the heat wave are damped quickly while the lower ones remain longer.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{../Figures/sol}
     \caption{Solution of the heat diffusion equation at different points in time using the $\theta$-scheme}
-    \label{fig:solution2}
+    \label{fig:solution}
 \end{figure}
 \subsection{Analytical analysis $\theta = 0$}
 
@@ -205,7 +209,23 @@ where the dominant term depends on $k^2$ and $h^2$ which means that the scheme i
 
 \subsubsection{Stability}
 
+Following the same approach as before the eigenvalues of $B = A_L^{-1}A_E$ should lie inside the unit circle.
+
+\begin{equation}
+\lambda_B = \frac{1+ \theta \mu \lambda_p}{1 - \theta \mu \lambda_p }  = \frac{1 + (\frac{1}{2} \mu + \frac{1}{12}) \lambda_p}{1 - (\frac{1}{2} \mu + \frac{1}{12}) \lambda_p}
+\end{equation}
+
+where $\lambda_B$ is given by equation \ref{eq:eig} and $\mu = \kappa k / h^2$. We know that $\lambda_p$ is strictly negative and since for the scheme to be stable $|\lambda_B| \leq 1$, we need $\mu$ to be positive. Which means that the system will be stable for any choice of $h > 0$ and $k > 0$.
+
 \subsubsection{Convergence}
+
+Again, a system of the form (9.16) is convergent if it is Lax-Richtmyer stable. We have proved in the previous section that the eigenvalues of $B$ are within the unit circle for any positive choice of the step size. Hence, in this case
+
+\begin{equation}
+||B(k)|| \leq 1
+\end{equation}  
+
+for any $k > 0$ and $h > 0$.
 
 \subsubsection{Discrete Maximum Principle}
 
