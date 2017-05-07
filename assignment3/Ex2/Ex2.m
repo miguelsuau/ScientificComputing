@@ -113,7 +113,7 @@ T = f^(-1);     % period
 lambda = 1;     % wave length
 dx = 1/100;
 dt = 16/1000;
-Cr = a*dx/dt;
+Cr = a*(dt/dx);
 xmin = -1;
 xmax = 1;
 t = 0;
@@ -176,17 +176,39 @@ a = 1/2;        % speed
 f = 1/2;        % frequency
 T = f^(-1);     % period
 lambda = 1;     % wave length
-N = 200;        % number of points - 1
 dx = 1/100;
 dt = 16/1000;
+Cr = 0.8; % fixed
 xmin = -1;
 xmax = 1;
 t = 0;
 tmax = nWavePeriods*T; % tmax = 80 s
 steps = tmax/dt;
+err = [];
+dxs = []; dts = [];
+g = @(phi) 1 - Cr + Cr*exp(1i*phi); % phi = xi*dx
+xi = 2*pi/1; % 2*pi/L, L = 1
 
-x = xmin-dx:dx:xmax+dx;
+fprintf('Running the convergence check loop...\n');
+for vdt = [1/100 1/150 1/200 1/250 1/300]
+    vdx = a*vdt/Cr; % Cr = a*(dt/dx) => dx = a*dt/Cr
+    fprintf('Using Cr = %f, dt = %f, dx = %f\n', a*vdt/vdx, vdt, vdx);
+    [Uup, Utrue] = upwind( u, a, vdx, vdt, xmin, xmax, tmax );
+    err = [err max(abs(Uup(end,:)-Utrue(end,:)))];
+    dxs = [dxs vdx]; dts = [dts vdt];
+end
+figure(1); clf;
+subplot(1,2,1);
+loglog(dts,dts,dts,err,'o-');
+legend({'$\mathcal{O}(\Delta t)$', 'Upwind'},'Interpreter','latex','location','southeast','FontSize',16)
+set(gca, 'FontSize', 14);
+subplot(1,2,2);
+loglog(dxs,dxs,dxs,err,'o-');
+legend({'$\mathcal{O}(\Delta x)$', 'Upwind'},'Interpreter','latex','location','southeast','FontSize',16)
+set(gca, 'FontSize', 14);
 
-
-[Uup, Utrue] = upwind(u, tmax);
+%% Finding the phase difference
+[c,lag] = xcorr(Uup(end,:), Utrue(1,:));
+[maxC,cIdx]=max(c);
+fprintf('Phase difference is %e\n', lag(cIdx));
 
