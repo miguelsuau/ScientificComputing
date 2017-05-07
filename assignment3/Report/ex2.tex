@@ -36,6 +36,11 @@ In order to perform the analysis the term $U^n_j$ is rewritten as $g(\xi)^n e^{i
 \end{aligned}\label{ex2:eq:neumann}
 \end{equation}
 Requiring the amplification factor to be bound by 1 in magnitude produces the stability bounds for the method (LV 10.5). In this case it is clear that $g(\xi)$ is a circle centered at $1 - \nu$ with radius equal to the Courant number. To satisfy the aforementioned bounds $g(\xi)$ needs to be contained in a unit circle in the complex plane, which is only possible when the Courant number is between 0 and 1 (inclusive).
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=3in]{../Figures/ex2_1_stability}
+    \caption{$g(\xi)$ evaluated on the complex plane for $\nu = 0.8$ and $\Delta x = \frac{1}{100}$. The red dashed circle indicates the unit circle and the blue $g(\xi)$ is clearly within bounds, which confirms results of the previous analysis.}
+\end{figure}
 
 % 2.2
 \subsection{Matlab implementation of FTBS and convergence}
@@ -83,6 +88,11 @@ end
 \end{lstlisting}%end code
 \subsubsection*{Convergence of the solver}
 Results from the theory show the convergence rate will be $\mathcal{O}(\Delta t + \Delta x)$ because of the spatial approximation combined with the Euler's method (forward in time) as shown in slide 20 from Lecture 22. Let's try to verify that.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/ex2_2_convergence}
+    \caption{Convergence of the Upwind method shown on the advection problem from 2.3, left plot is showcasing $\mathcal{O}(\Delta t)$ while the right one depicts $\mathcal{O}(\Delta x)$. Courant number was fixed at $\nu = 0.8$. The theoretical convergence is shown as a line and the calculated $\mathcal{O}$ as circles indicating the evaluated $\Delta t$ and $\Delta x$ in the logarithmic scale.}
+\end{figure}
 
 % 2.3
 \subsection{Dispersion and diffusion}
