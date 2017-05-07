@@ -174,9 +174,9 @@ and in this case since $\theta = \frac{1}{2} + \frac{1}{12 \mu}$
 
 \subsection{Numerical evaluation}
 
-After deriving the analytical expressions of the method's convergence, we shall check the rates obtained for the two values of $\theta$. To do so, we use the solver implemented in MATLAB, using a loop we vary the time and the space grids accordingly so that the system remains within the stability region, and we compute the local truncation error (LTE) at every iteration.
+After deriving the analytical expressions, we shall check that the rates and the conditions obtained are satisfied in reality. To do so, we insert the solver implemented in MATLAB in a loop where we vary the time and space grids accordingly so that the system remains within the stability region and satisfies both the convergence criteria and the discrete maximum principle.
 
-For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. The dashed lines, which represent the theoretical order of the system represent an upper bound to the empirical curves $O(h^2)$ and $O(k)$. It is easy to see that in both comparisons the slope of the LTE in logarithmic scale is greater than the slope of the help lines.
+For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. The dashed lines, which are the theoretical order of the system ($O(h^2)$ and $O(k)$), can be thought as an upper bound for the empirical curves. It is easy to see that in both comparisons the slope of the LTE in logarithmic scale is greater than the slope of the help lines.
 
 \begin{figure}[H]
     \centering
