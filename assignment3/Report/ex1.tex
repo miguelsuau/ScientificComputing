@@ -37,7 +37,37 @@ It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivale
 
 The scheme takes the form of system of equations which can be written in matrix form as:
 
-this is nothing but a system of ordinary differential equations and thus, the solution at a given time can be obtained by inverting the tridiagonal matrix in the left hand side of equation \ref{eq:matrixform}. Consequently, using a loop the global solution can be computed sequentially at every point in the time grid.
+\begin{equation}
+(I - \theta \mu A_0) \mathbf{u}^{n+1} = (I + (1-\theta)\mu A_0) \mathbf{u}^n + (\mathbf{g}^{n+1} - \mathbf{g}^n)
+\label{eq:matrixform}
+\end{equation}
+
+where $I$ is the identity matrix and $u^n$ and $g^n$ are vectors of the form
+
+\begin{equation}
+\mathbf{u^n} = 
+\begin{bmatrix}
+U_0^n && U_1^n && ... && U_{M-1}^n && U_{M}^n
+\end{bmatrix}^T
+\qquad
+\mathbf{g^n} = 
+\begin{bmatrix}
+g_L^n && 0 && ... && 0 && g_R^n
+\end{bmatrix}^T
+\end{equation}
+
+while $A_0$ is a matrix of dimensions $(M+1) \times (N+1)$ of the form
+
+\begin{equation}
+A_0 = \begin{bmatrix}
+0 && 0 \\
+1 && -2 && 1 \\ 
+&& \ddots && \ddots && \ddots \\
+&& && 1 && -2 && 1
+\end{bmatrix}
+\end{equation}
+
+Equation \ref{eq:matrixform} is nothing but a system of ordinary differential equations and thus, the solution at a given time can be obtained by inverting the tridiagonal matrix in the left hand side. Consequently, using a loop the global solution can be computed sequentially at every point in the time grid.
 
 The code snippet below shows the implementation of this scheme in MATLAB where the function given by equation 2 in the assignment specifications is used to compute the initial and boundary conditions.
 
@@ -90,9 +120,9 @@ the first term in the right hand side of equation \ref{eq:order} disappears and 
 
 \subsubsection{Stability}
 
-Secondly, in order to find the stability of the method we need to check when the eigenvalues of the matrix $A$ in the right hand side of equation \ref{eq:matrixform} lie within the unit circle.
+Secondly, in order to find the stability of the method we need to check when the eigenvalues of the matrix $A_E$ in the right hand side of equation \ref{eq:matrixform} lie within the unit circle.
 
-According to 2.23 in Randall Leveque the eigenvalues of $A$ are given by
+According to 2.23 in Randall Leveque the eigenvalues of $A_0$ are given by
 
 \begin{equation}
 \lambda_p =  2(cos(p \pi h) - 1) \qquad for \qquad p = 1,2, ..., m
@@ -113,6 +143,19 @@ which means that for the system to be stable the following relation must be sati
 
 \subsubsection{Convergence}
 
+According to theorem 9.2 and definition 9.1 in R.L. a system of the form (9.16) is convergent if there is a constant $C_t > 0$ such that 
+
+\begin{equation}
+||B(k)^n|| \leq C_t
+\end{equation}  
+
+in our case
+
+\begin{equation}
+B(k) =  A_E = I + \mu A_0 
+\end{equation}
+
+We already showed in section 1.2.2 that for $\mu \leq 1/2$ the eigenvalues of $A_E$ lied within the unit circle and hence, $||A_E|| \leq 1$, which means that for this choice of $\mu$ the system is both Lax-Richtmyer stable and convergent.
 
 
 \subsubsection{Discrete Maximum Principle}

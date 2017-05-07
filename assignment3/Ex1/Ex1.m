@@ -27,7 +27,7 @@ title('t=0.20')
 subplot(2,2,4)
 plot(x,U(:,50),'linewidth',1.6)
 title('t=0.5')
-print('sol','-dpng')
+print('c3','-dpng')
 %% Demonstrate convergence
 
 h = logspace(-2,-1,10);
