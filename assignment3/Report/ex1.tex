@@ -28,12 +28,14 @@ where $h$ and $k$ represent the distance between two grid points in space and ti
 A more general scheme for solving this problem can be formulated as:
 
 \begin{equation}
-\frac{U_i^{n+1} - U_i^n}{k} = \frac{kappa}{h^2}((1-\theta)(U_{i-1}^n - 2 U_i^n + U_{i+1}^n) + \theta(U_{i-1}^{n+1} - 2 U_i^{n+1} + U_{i+1}^{n+1})
+\frac{U_i^{n+1} - U_i^n}{k} = \frac{\kappa}{h^2}((1-\theta)(U_{i-1}^n - 2 U_i^n + U_{i+1}^n) + \theta(U_{i-1}^{n+1} - 2 U_i^{n+1} + U_{i+1}^{n+1})
 \label{eq:genscheme}
 \end{equation}
 where $0 \leq \theta \leq 1$
 
-It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. [[[[The solution at one point in space relies on both its spatial neighbors at the current time and at the previous.]]]!!!
+It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. 
+%% TODO: [FIXES] Make sure to remove this before handing in
+[[[[The solution at one point in space relies on both its spatial neighbors at the current time and at the previous.]]]!!!
 
 The scheme takes the form of system of equations which can be written in matrix form as:
 
@@ -72,7 +74,7 @@ Equation \ref{eq:matrixform} is nothing but a system of ordinary differential eq
 The code snippet below shows the implementation of this scheme in MATLAB where the function given by equation 2 in the assignment specifications is used to compute the initial and boundary conditions.
 
 \lstinputlisting{../Ex1/parabolicSolver.m}
-
+%% TODO: [FIXES] Broken reference here
 Figure \ref{fig:solution1} represents the solution at different points in time. It is easy to see in the graphs how the higher frequencies in the heat wave are damped quickly while the lower ones remain longer.
 
 \begin{figure}[H]
@@ -125,7 +127,7 @@ Secondly, in order to find the stability of the method we need to check when the
 According to 2.23 in Randall Leveque the eigenvalues of $A_0$ are given by
 
 \begin{equation}
-\lambda_p =  2(cos(p \pi h) - 1) \qquad for \qquad p = 1,2, ..., m
+\lambda_p =  2(\cos(p \pi h) - 1) \qquad \mathrm{for} \qquad p = 1,2, ..., m
 \label{eq:eig}
 \end{equation}
 
@@ -176,7 +178,7 @@ and in this case since $\theta = 0$
 
 which is consistent with the stability criteria.
 
-
+%% TODO: [FIXES] Possibly a mistake in the title
 \subsection{Analytical analysis $\theta = 1/2 + h^2/(12k\kappa)$}
 
 \subsubsection{Consistency}
@@ -225,7 +227,7 @@ and in this case since $\theta = \frac{1}{2} + \frac{1}{12 \mu}$
 
 After deriving the analytical expressions, we shall check that the rates and the conditions obtained are satisfied in reality. To do so, we insert the solver implemented in MATLAB in a loop where we vary the time and space grids accordingly so that the system remains within the stability region and satisfies both the convergence criteria and the discrete maximum principle.
 
-For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. The dashed lines, which are the theoretical order of the system ($O(h^2)$ and $O(k)$), can be thought as an upper bound for the empirical curves. It is easy to see that in both comparisons the slope of the LTE in logarithmic scale is greater than the slope of the help lines.
+For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation of the LTE when changing the size of  $h$ and $k$. In this case, we set the value of $k$ to be equal to $\frac{h^2}{2}$ so that the eigenvalues of the system lie within the unit circle. The dashed lines, which are the theoretical order of the system ($\mathcal{O}(h^2)$ and $\mathcal{O}(k)$), can be thought as an upper bound for the empirical curves. It is easy to see that in both comparisons the slope of the LTE in logarithmic scale is greater than the slope of the help lines.
 
 \begin{figure}[H]
     \centering
@@ -235,7 +237,7 @@ For the choice of $\theta = 0$, figure \ref{fig:conv1} represents the variation 
 \end{figure}
 
 
-When $k = h^2/6$ the graph in figure \ref{fig:conv2} also reveals that the the local truncation error respects the theoretical limits of $O(h^4)$ and $O(k^2)$.
+When $k = h^2/6$ the graph in figure \ref{fig:conv2} also reveals that the the local truncation error respects the theoretical limits of $\mathcal{O}(h^4)$ and $\mathcal{O}(k^2)$.
 
 \begin{figure}[H]
     \centering
@@ -243,7 +245,7 @@ When $k = h^2/6$ the graph in figure \ref{fig:conv2} also reveals that the the l
     \caption{Local truncation error for different values of $h$ and $k$, $\mu = 1/6$ and $\theta = 0$ in logarithmic scale.}
     \label{fig:conv2}
 \end{figure}
-
+%% TODO: [FIXES] Broken reference here to fig:conv3
 On the other hand, for the especial choice of $\theta = 1/2 + h^2/(12k\kappa)$ figure \ref{fig:conv3} also holds with what we found when we evaluated the scheme analytically in the previous section. Besides, in order to satisfy the discrete maximum principle $k$ was selected so that $\mu = 5/6$.
 
 \begin{figure}[H]
