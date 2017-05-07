@@ -1,0 +1,75 @@
+\documentclass[main.tex]{subfiles}
+\clearpage
+% Exercise 3
+\section{Non-linear advection-diffusion equation}
+Main focus of this section is going to be solving the viscous Burger's equation (VBE). As the title hints it contains parabolic and hyperbolic parts and is derived as a ``toy'' version from the family of non-linear hyperbolic equations with viscous terms (see 11.2 or E.15 in LV) in comparison to the well known Navier-Stokes equations.
+\begin{alignat}{3}
+  & \partial_t u(x,t) + \frac{1}{2} \partial_x \left( u(x,t)^2 \right) = \varepsilon \partial_{xx} u(x,t), \qquad && -1 < x < 1, && t > 0, \label{ex3:eq:vbe}\\
+  & u(-1,t) = g_L(t), && && t > 0, \\ 
+  & u(1,t) = g_R(t), && && t > 0, \\ 
+  & u(x,0) = \eta(x), && -1 \leq x \leq 1.
+\end{alignat}
+The right hand side of equation \ref{ex3:eq:vbe} is called the viscous term (or heat conduction) and the term $\frac{1}{2} \partial_x \left( u(x,t)^2 \right)$ refers to the flux function. The handout mentions the fact that the solution $u$ is differentiable and the diffusion coefficient $\varepsilon$ is constant and greater than zero. Another important piece of information from the handout is the solution to the IBV problem for appropriate ICs and BCs given as:
+\begin{equation}
+    u(x,t) = - \tanh\left( \frac{x + 0.5 - t}{2\varepsilon} \right) + 1
+\end{equation}
+this function will be used to verify the numerical scheme that will proposed in the followin section.
+% 3.1
+\subsection{Stable numerical scheme}
+Combining the numerical schemes from the first two sections gives rise to
+\begin{equation}
+    U_{j}^{n+1} = U_{j}^{n} \left(1 - \frac{\Delta t}{\Delta x}\left(U_{j}^{n} - U_{j-1}^{n}\right)\right) + \frac{\varepsilon \Delta t}{\Delta x^2}\left(U_{j+1}^{n} - 2 U_{j}^{n} + U_{j-1}^{n}\right)
+\end{equation}
+%% TODO: More about the first scheme that didn't work
+
+Since the first scheme didn't yield much success, it was decided to find some similar scheme in the literature. C. Obertscheider's article on Burger's equation was chosen and the scheme was modified to be:
+%% TODO: Find a name for this scheme
+\begin{equation}
+    U^{n+1}_{j} = U^{n}_{j} + \frac{\varepsilon \Delta t}{\Delta x^2}\left( U^{n}_{j+1} - 2U^{n}_{j} + U^{n}_{j-1} \right) + \frac{1}{\Delta x}\left( f\left(U^{n}_{j+\frac{1}{2}}\right) - f\left(U^{n}_{j-\frac{1}{2}}\right) \right)
+\end{equation}
+where $f$ is the flux function $f(u) = \frac{1}{2}u^2$ and $f(U^{n}_{j\pm\frac{1}{2}})$ denotes the average of $f(U_j^n)$ and $f(U_{j\pm 1}^n)$.
+
+%% TODO: Is it worth including von Neumann analysis if it leads nowhere?
+
+% 3.2
+\subsection{Matlab implementation and convergence}
+%% TODO: Decide what Matlab code should be here (with comments maybe?)
+\subsubsection*{Convergence}
+%% TODO: Convergence section + plots
+
+%% TODO: Add convergence plot here
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=\textwidth]{}
+%    \caption{}
+%\end{figure}
+
+% 3.3
+\subsection{Testing}
+To demonstrate the implementation proposed in the previous section a problem is formulated as follows: $g_L(t) = g_R(t) = 0$ (homogenous BCs) and $\eta(x) = - \sin(\pi x)$. Solution will be found using an uniform grid and with $\varepsilon = \frac{1}{100 \pi}$. A figure will be presented demonstrating the solution at time $t_s = 1.6037/\pi$ along with value for $\partial_x u$ at $x=0$, which should be $-152.00516$ according to the handout. This value will be calculated as $\frac{u_c(\Delta x,t_s) - u_c(-\Delta x,t_s)}{2 \Delta x}$.
+%% TODO: Add skewed sine function plot here
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=\textwidth]{}
+%    \caption{}
+%\end{figure}
+
+% 3.4
+\subsection{Approaches to maintain accuracy}
+As implementing a high-order accurate discretization method was too time consuming without leading to any results, it was decided to chose a non-uniform grid that captures the mid-points of the spatial domain in a finer manner.
+%% TODO: Include results for maintaining accuracy here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
