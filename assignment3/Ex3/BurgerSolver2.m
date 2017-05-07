@@ -1,4 +1,4 @@
-function U = BurgerSolver2(h,k,epsilon,tmax)
+function [U,t,x] = BurgerSolver2(h,k,epsilon,tmax)
 M = ceil(2/h);
 N = ceil(tmax/k);
 x = linspace(-1,1,M);
@@ -13,7 +13,4 @@ for n=2:N
     U(idx,n) = k*epsilon/h^2*(U(idx-1,n-1)-2*U(idx,n-1)+U(idx+1,n-1)) +...
         U(idx,n-1) - k/h*(U(idx+1,n-1)-U(idx,n-1));
 end
-figure(1)
-[T,X] = meshgrid(t,x);
-mesh(X,T,U)
 end

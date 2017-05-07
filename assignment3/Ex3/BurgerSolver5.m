@@ -15,8 +15,4 @@ for n=2:N
     U(idx,n) = k*epsilon/h^2*(U(idx-1,n-1)-2*U(idx,n-1)+U(idx+1,n-1)) +...
         U(idx,n-1) - k/(2*h)*(fp-fm);
 end
-figure(1)
-[T,X] = meshgrid(t,x);
-mesh(X,T,U)
-plot(x,U(:,end))
 end
