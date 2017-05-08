@@ -97,32 +97,56 @@
 % --------------- Exercise 1 ---------------
 \subsection{Exercise 1 code}
 %
-\subsubsection{2-point Boundary Value Problems}
-%\lstinputlisting{../Ex1/NewtonsMethod.m}
+\subsubsection{Plots and local truncation errors}
+\lstinputlisting{../Ex1/Ex1.m}
 %
-\subsubsection{}
-%\lstinputlisting{../Ex1/.m}
+\subsubsection{Parabolic solver}
+\lstinputlisting{../Ex1/parabolicSolver.m}
+\subsubsection{Boundary function}
+\lstinputlisting{../Ex1/boundaryFun.m}
 
 % --------------- Exercise 2 ---------------
+\textcolor[RGB]{20,20,20}{\rule{\linewidth}{0.5pt}}
 \subsection{Exercise 2 code}
 %
 \subsubsection{Upwind method implementation}
-%\lstinputlisting{../Ex2/.m}
+\lstinputlisting{../Ex2/upwind.m}
 %
-\subsubsection{Convergence and the problem from the handout}
-%\lstinputlisting{../Ex2/.m}
+\subsubsection{Convergence and the problems from the handout}
+\lstinputlisting{../Ex2/Ex2.m}
 %
 \subsubsection{Von Neumann results}
-%\lstinputlisting{../Ex2/.m}
+\lstinputlisting{../Ex2/vonNeumann.m}
 
 % --------------- Exercise 3 ---------------
+\textcolor[RGB]{20,20,20}{\rule{\linewidth}{0.5pt}}
 \subsection{Exercise 3 code}
 %
-\subsubsection{Implementation of the method for the viscous Burger's equation}
-%\lstinputlisting{../Ex3/.m}
+\subsubsection{Implementations of the solvers}
+There were multiple solvers that we've tried so we decided to include all of them, even the one that didn't work well (Solver 3 Crank-Nicolson attempt).
+\textbf{First solver}
+\lstinputlisting{../Ex3/BurgerSolver.m}
+\textbf{Second solver}
+\lstinputlisting{../Ex3/BurgerSolver2.m}
+\textbf{Third solver -- CN not working}
+\lstinputlisting{../Ex3/BurgerSolver3.m}
+\textbf{Fourth solver}
+\lstinputlisting{../Ex3/BurgerSolver4.m}
+\textbf{Fifth solver}
+\lstinputlisting{../Ex3/BurgerSolver5.m}
+\textbf{Boundary function used}
+\lstinputlisting{../Ex3/boundaryFun.m}
 %
-\subsubsection{}
-%\lstinputlisting{../Ex3/.m}
+\subsubsection{Plotting and driver code used throughout Ex3}
+\lstinputlisting{../Ex3/Ex3.m}
+%
+\subsubsection{Non-uniform grid experiments}
+\textbf{Visualizations and driver for non-uniform grid implementation}
+\lstinputlisting{../Ex3/Ex3_nonuniform.m}
+\textbf{Non-uniform grid generator}
+\lstinputlisting{../Ex3/nonuniformgrid.m}
+\textbf{Burger solver implementing the non-uniform grid}
+\lstinputlisting{../Ex3/BurgerSolverNonUniform.m}
 
 \end{document}
 

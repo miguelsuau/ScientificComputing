@@ -33,9 +33,7 @@ A more general scheme for solving this problem can be formulated as:
 \end{equation}
 where $0 \leq \theta \leq 1$
 
-It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate. 
-%% TODO: [FIXES] Make sure to remove this before handing in
-[[[[The solution at one point in space relies on both its spatial neighbors at the current time and at the previous.]]]!!!
+It is easy to see that when $\theta = 0$ equation \ref{eq:genscheme} is equivalent to \ref{eq:scheme}. However for any other value of $\theta$ the scheme becomes implicit but also more accurate.
 
 The scheme takes the form of system of equations which can be written in matrix form as:
 
@@ -87,7 +85,7 @@ Figure \ref{fig:solution} represents the solution at different points in time. I
     \caption{Solution of the heat diffusion equation at different points in time using the $\theta$-scheme}
     \label{fig:solution}
 \end{figure}
-\subsection{Analytical analysis $\theta = 0$}
+\subsection{Scheme analysis $\theta = 0$}
 
 Once the the scheme for solving the problem numerically has been built, it might be interesting to make an analysis on the system and draw some conclusions about how large the grid should be for the solver to be stable, what is its order of consistency or under what circumstances it satisfies the discrete maximum principle.
 
@@ -182,8 +180,7 @@ and in this case since $\theta = 0$
 
 which is consistent with the stability criteria.
 
-%% TODO: [FIXES] Possibly a mistake in the title
-\subsection{Analytical analysis $\theta = 1/2 + h^2/(12k\kappa)$}
+\subsection{Scheme analysis $\theta = 1/2 + h^2/(12k\kappa)$}
 
 \subsubsection{Consistency}
 
@@ -266,11 +263,11 @@ When $k = h^2/6$ the graph in figure \ref{fig:conv2} also reveals that the the l
     \label{fig:conv2}
 \end{figure}
 %% TODO: [FIXES] Broken reference here to fig:conv3
-On the other hand, for the especial choice of $\theta = 1/2 + h^2/(12k\kappa)$ figure \ref{fig:conv3} also holds with what we found when we evaluated the scheme analytically in the previous section. Besides, in order to satisfy the discrete maximum principle $k$ was selected so that $\mu = 5/6$.
+On the other hand, for the special choice of $\theta = 1/2 + h^2/(12k\kappa)$ figure \ref{fig:conv3} also holds with what we found when we evaluated the scheme analytically in the previous section. Besides, in order to satisfy the discrete maximum principle $k$ was selected so that $\mu = 5/6$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{../Figures/c3}
     \caption{Local truncation error for different values of $h$ and $k$, $\mu = 5/6$ and $\theta = 1/2 + h^2/(12k\kappa)$ in logarithmic scale.}
-    \label{fig:conv2}
+    \label{fig:conv3}
 \end{figure}
