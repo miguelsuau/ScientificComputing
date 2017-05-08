@@ -1,4 +1,4 @@
-%% Another nonuniform grid
+%% Yet another nonuniform grid
 h = 0.003;
 k = h^2;
 tmax = 1.6037/pi;
@@ -24,21 +24,3 @@ xlabel('x'); ylabel('u');
 subplot(2,1,2);
 plot(xnu,zeros(length(xnu)),'o-');
 title(sprintf('Visualization of the non-uniform grid for %d points', nonunifpoints));
-
-%% True solution
-h = 0.003;
-k = h^2;
-epsilon = 0.01;
-tmax = 1;
-
-nonunifpoints = 35;
-
-[Unu,tnu,xnu] = BurgerSolverNonUniform(nonunifpoints,k,epsilon,tmax);
-
-x = nonuniformgrid(nonunifpoints);
-t = linspace(0,tmax,tmax/k);
-[X,T] = ndgrid(x,t);
-Utrue = boundaryFun(X,T,epsilon);
-
-figure(1);
-plot(x,Unu(:,end),'ro-',x,Utrue(:,1),'b-');

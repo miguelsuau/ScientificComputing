@@ -1,3 +1,4 @@
+% Don't put in the report
 u = @(x,t,epsi) -tanh((x+0.5-t)/(2*epsi)) + 1;
 x = linspace(-1,1,500);
 t = linspace(0,2*(1.6037/pi),1000); % 1.6037/pi ~= 0.5105

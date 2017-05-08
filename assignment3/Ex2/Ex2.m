@@ -44,65 +44,6 @@ for k = 1:length(t)
     drawnow
 end
 
-%% Visualize `u`
-[m,n] = size(U);
-maskt = 1:501;
-maskx = 1:n;
-
-figure(1)
-subplot(2,2,1)
-contour(X(maskt,maskx),T(maskt,maskx),U(maskt,maskx)), colorbar
-xlabel('x'), ylabel('t')
-
-subplot(2,2,2)
-mesh(X(maskt,maskx),T(maskt,maskx),U(maskt,maskx))
-xlabel('x'), ylabel('t'), zlabel('u')
-
-subplot(2,2,3)
-plot(T(maskt,1),U(maskt,1:1:5))
-xlabel('t'), ylabel('U(t,x=1,2,3,4,5)')
-
-subplot(2,2,4)
-plot(X(1,:), U(1:1:5, :))
-xlabel('x'), ylabel('U(x,t=1,2,3,4,5)')
-
-%% FTBS
-Uftbs = ftbs(u, cr, 40, 100);
-
-[m,n] = size(Uftbs);
-maskt = 1:501;
-maskx = 1:n;
-
-figure(2)
-subplot(2,2,1)
-contour(X(maskt,maskx),T(maskt,maskx),Uftbs(maskt,maskx)), colorbar
-xlabel('x'), ylabel('t')
-
-subplot(2,2,2)
-mesh(X(maskt,maskx),T(maskt,maskx),Uftbs(maskt,maskx))
-xlabel('x'), ylabel('t'), zlabel('u')
-
-subplot(2,2,3)
-plot(T(maskt,1),Uftbs(maskt,1:1:5))
-xlabel('t'), ylabel('U(t,x=1,2,3,4,5)')
-
-subplot(2,2,4)
-plot(linspace(-1,1,n), Uftbs(1:1:5, :))
-xlabel('x'), ylabel('U(x,t=1,2,3,4,5)')
-
-% Show comparison
-figure(1); figure(2);
-
-figure(4)
-xx = linspace(-1,1,n);
-Ut = U(:,1:end-1);
-subplot(3,1,1)
-plot(xx, Uftbs(1, :), 'bo-', xx, Ut(1,:), 'rx-');
-subplot(3,1,2)
-plot(xx, Uftbs(1001, :), 'bo-', xx, Ut(1001,:), 'rx-');
-subplot(3,1,3)
-plot(xx, Uftbs(2001, :), 'bo-', xx, Ut(2001,:), 'rx-');
-
 %% Upwind
 ShowMovingSolution = false;
 nWavePeriods = 40;
@@ -154,20 +95,6 @@ if ShowMovingSolution
         pause(0.0001);
     end
 end
-
-%% Analysis of dispersion and diffusion
-figure(7);
-g40 = g(0:40, 0.01);
-plot(0:40, abs(g40), 'o-');
-title('Upwind method -- diffusion with $\xi = 1,2,\dots,40$; $\Delta x = \frac{1}{100}$; $\nu = \frac{8}{10}$', 'Interpreter', 'latex', 'FontSize', 16);
-xlabel('$\xi$', 'Interpreter', 'latex', 'FontSize', 16)
-ylabel('$\Re \big( g(\xi) \big)$', 'Interpreter', 'latex', 'FontSize', 16)
-
-figure(8);
-plot(0:40, angle(g40), 'x-');
-title('Upwind method -- dispersion with $\xi = 1,2,\dots,40$; $\Delta x = \frac{1}{100}$; $\nu = \frac{8}{10}$', 'Interpreter', 'latex', 'FontSize', 16);
-xlabel('$\xi$', 'Interpreter', 'latex', 'FontSize', 16)
-ylabel('$\Im \big( g(\xi) \big)$', 'Interpreter', 'latex', 'FontSize', 16)
 
 %% Analysis of the errors
 nWavePeriods = 40;
