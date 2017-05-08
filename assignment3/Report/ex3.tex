@@ -34,26 +34,38 @@ where $f$ is the flux function $f(u) = \frac{1}{2}u^2$ and $f(U^{n}_{j\pm\frac{1
 
 % 3.2
 \subsection{Matlab implementation and convergence}
-%% TODO: Decide what Matlab code should be here (with comments maybe?)
-\subsubsection*{Convergence}
-%% TODO: Convergence section + plots
 
-%% TODO: Add convergence plot here
-%\begin{figure}[h]
-%    \centering
-%    \includegraphics[width=\textwidth]{}
-%    \caption{}
-%\end{figure}
+The two schemes described were implemented in MATLAB although the second one seem to be more stable and produced better results. 
+
+\lstinputlisting{../Ex3/BurgerSolver4.m}
+
+\subsubsection*{Convergence}
+
+Using the scheme given by equation 42 we compute the solution and calculated the local truncation error at the first point of the grid. Due to nonlinearities we were not able to obtain an expression for the stability of our methods. Hence, the grid was selected so that h and k satisfied the stability criteria of the FTCS solver found in the first exercise and the upwind method in the second exercise.
+
+Figure shows a convergence plot where the two help lines reveal that with the correction the model order seems to be $\mathcal{O}(h^3 + k^2)$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/3_3convergence}
+    \caption{LTE for different values of $h$ and $k$}
+\end{figure}
 
 % 3.3
 \subsection{Testing}
 To demonstrate the implementation proposed in the previous section a problem is formulated as follows: $g_L(t) = g_R(t) = 0$ (homogenous BCs) and $\eta(x) = - \sin(\pi x)$. Solution will be found using an uniform grid and with $\varepsilon = \frac{1}{100 \pi}$. A figure will be presented demonstrating the solution at time $t_s = 1.6037/\pi$ along with value for $\partial_x u$ at $x=0$, which should be $-152.00516$ according to the handout. This value will be calculated as $\frac{u_c(\Delta x,t_s) - u_c(-\Delta x,t_s)}{2 \Delta x}$.
-%% TODO: Add skewed sine function plot here
-%\begin{figure}[h]
-%    \centering
-%    \includegraphics[width=\textwidth]{}
-%    \caption{}
-%\end{figure}
+
+The derivative computed using the first scheme was not even close to the given value as can be seen in figure 9. This is due to the fact that the solver is unable to capture the stiff part. 
+
+The second approach yielded a value of around -132 when setting h to 0.005 and $k = h^2$.
+
+The nonuniform grid solver that will be presented in the last section, just using 35 points for x produced a value of -150.5 for the derivative, which seems to be the best out of all solvers we have tried.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{../Figures/sol3_3subplot}
+    \caption{Solution at t=1.6037 using FTCS and upwind (top graph) FTCS and mid-point correction (bottom graph)}
+\end{figure}
 
 % 3.4
 \subsection{Approaches to maintain accuracy}
