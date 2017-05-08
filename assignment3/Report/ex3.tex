@@ -20,9 +20,10 @@ Combining the numerical schemes from the first two sections gives rise to
 \begin{equation}
     U_{j}^{n+1} = U_{j}^{n} \left(1 - \frac{\Delta t}{\Delta x}\left(U_{j}^{n} - U_{j-1}^{n}\right)\right) + \frac{\varepsilon \Delta t}{\Delta x^2}\left(U_{j+1}^{n} - 2 U_{j}^{n} + U_{j-1}^{n}\right)
 \end{equation}
+Von Neumann analysis was applied to this equation, however the term $g(\xi)$ could not be separated because of the multiplication in the $U^n_j (U^n_j - U^n_{j-1})$ term, so it was decided to test out the stability by choosing $\Delta t$ and $\Delta x$ by hand which unfortunately did not lead anywhere.
 %% TODO: More about the first scheme that didn't work
 
-Since the first scheme didn't yield much success, it was decided to find some similar scheme in the literature. C. Obertscheider's article on Burger's equation was chosen and the scheme was modified to be:
+Since the first scheme didn't yield much success, it was decided to find some similar scheme in the literature. C. Obertscheider's article on Burger's equations was chosen as a starting point and the scheme was modified to be:
 %% TODO: Find a name for this scheme
 \begin{equation}
     U^{n+1}_{j} = U^{n}_{j} + \frac{\varepsilon \Delta t}{\Delta x^2}\left( U^{n}_{j+1} - 2U^{n}_{j} + U^{n}_{j-1} \right) + \frac{1}{\Delta x}\left( f\left(U^{n}_{j+\frac{1}{2}}\right) - f\left(U^{n}_{j-\frac{1}{2}}\right) \right)
@@ -57,6 +58,11 @@ To demonstrate the implementation proposed in the previous section a problem is 
 % 3.4
 \subsection{Approaches to maintain accuracy}
 As implementing a high-order accurate discretization method was too time consuming without leading to any results, it was decided to chose a non-uniform grid that captures the mid-points of the spatial domain in a finer manner.
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=3in]{../Figures/ex3_4_nonuniform}
+    \caption{Non-uniform grid with 35 points concentrated mostly around 0 to try to capture the steep change of the slope}
+\end{figure}
 %% TODO: Include results for maintaining accuracy here
 
 
