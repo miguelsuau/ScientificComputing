@@ -31,7 +31,7 @@ print('c3','-dpng')
 %% Demonstrate convergence
 
 h = logspace(-2,-1,10);
-k = 5/6*h.^2;
+k = 7/6*h.^2;
 for i = 1:10
     theta(i) = 0.5 + h(i)^2/(12*k(i));
     mu = 1*k(i)/h(i)^2;
@@ -62,5 +62,5 @@ hold on
 loglog(k,k.^2,'--')
 xlabel('k')
 ylabel('\tau')
-legend({'LTE','$\mathcal{O}(k^2)$'},'Interpreter','latex','location','northwest')
+legend({'LTE','$\mathcal{O}(k^2)$'},'Interpreter','latex','location','southeast')
 print('c3','-dpng')
