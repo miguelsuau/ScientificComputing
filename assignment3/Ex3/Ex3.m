@@ -66,18 +66,3 @@ plot(x2,U2(:,end))
 % find closest point to 0
 [~,idx] = min(abs(x2));
 dx2 = (U(idx+1,end)-U(idx,end))/h;
-%% Nonuniform grid
-% Divide the problem in sections
-Xspan = [-1 -0.09];
-h = 0.1;
-k = h^2;
-[U1,t1,x1] = BurgerSolver5(h,k,epsilon,tmax,xspan);
-xpan = [-0.1 0.1];
-h = 0.01;
-k = h^2;
-[U2,t2,x2] = BurgerSolver5(h,k,epsilon,tmax,xspan);
-xspan = [0.11 1];
-h = 0.1;
-k = h^2;
-[U3,t3,x3] = BurgerSolver5(h,k,epsilon,tmax,xspan);
-% join solution
