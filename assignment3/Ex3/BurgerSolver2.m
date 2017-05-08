@@ -11,6 +11,6 @@ U(M,:) = 0;
 idx = 2:(M-1);
 for n=2:N
     U(idx,n) = k*epsilon/h^2*(U(idx-1,n-1)-2*U(idx,n-1)+U(idx+1,n-1)) +...
-        U(idx,n-1) - k/h*(U(idx+1,n-1)-U(idx,n-1));
+        U(idx,n-1) - k/h*U(idx,n-1).*(U(idx,n-1)-U(idx-1,n-1));
 end
 end
